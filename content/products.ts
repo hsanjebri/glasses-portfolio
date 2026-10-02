@@ -1,0 +1,571 @@
+import type { Accessory, Colourway, Frame, FrameDimensions, Product } from './types'
+
+/**
+ * The catalogue. Brands and model names are real; prices, colourway lists,
+ * stock and photographs are not.
+ * PLACEHOLDER — every price, every colourway list and every photograph.
+ */
+
+const dims = (lensWidth: number, bridge: number, templeLength: number, lensHeight: number): FrameDimensions => ({
+  lensWidth,
+  bridge,
+  templeLength,
+  lensHeight,
+  totalWidth: lensWidth * 2 + bridge + 12,
+})
+
+/* ── Colourways shared across houses ── */
+const C = {
+  havana: { id: 'havane', name: 'Havane', family: 'tortoise', swatch: ['#6b4423', '#2b1a0e'] },
+  black: { id: 'noir', name: 'Noir', family: 'black', swatch: ['#111111', '#2a2a2a'] },
+  crystal: { id: 'cristal', name: 'Cristal', family: 'crystal', swatch: ['#d9dcdf', '#f4f5f6'] },
+  gold: { id: 'or', name: 'Or', family: 'gold', swatch: ['#c2a054', '#e6cf8e'] },
+  silver: { id: 'argent', name: 'Argent', family: 'silver', swatch: ['#a9adb0', '#dfe1e2'] },
+  blond: { id: 'ecaille-blonde', name: 'Écaille blonde', family: 'tortoise', swatch: ['#b07a3c', '#5a3818'] },
+} satisfies Record<string, Colourway>
+
+const frames: Frame[] = [
+  /* ── Optique ── */
+  {
+    kind: 'frame',
+    slug: 'persol-po3092v',
+    brand: 'persol',
+    name: 'PO3092V',
+    reference: 'PO3092V',
+    category: 'optical',
+    shape: 'round',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 690, // PLACEHOLDER
+    createdAt: '2026-09-20',
+    photo: 'persol3092',
+    description: 'Le pantos de Persol, avec la flèche Supreme sur la charnière et un acétate qui prend la lumière.',
+    details: ['Acétate Havane', 'Charnière Meflecto flexible', 'Flèche Supreme en métal'],
+    colourways: [C.havana, C.black],
+    dimensions: dims(50, 19, 145, 43),
+    lensCapability: ['plano', 'single-vision', 'progressive', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'oliver-peoples-omalley',
+    brand: 'oliver-peoples',
+    name: 'O’Malley',
+    reference: 'OV5183',
+    category: 'optical',
+    shape: 'round',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 1290, // PLACEHOLDER
+    createdAt: '2026-09-28',
+    photo: 'omalley',
+    featured: true,
+    description: 'Une ronde aux proportions des années cinquante, rivets en losange et acétate travaillé à la main.',
+    details: ['Acétate fait main', 'Rivets en losange', 'Plaquettes intégrées'],
+    colourways: [C.havana, C.black, C.blond],
+    dimensions: dims(47, 22, 145, 42),
+    lensCapability: ['plano', 'single-vision', 'progressive', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'moscot-lemtosh',
+    brand: 'moscot',
+    name: 'Lemtosh',
+    category: 'optical',
+    shape: 'round',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 980, // PLACEHOLDER
+    createdAt: '2026-09-12',
+    photo: 'lemtosh',
+    featured: true,
+    description: 'Le classique du Lower East Side depuis 1915 : face épaisse, pont en trou de serrure, rivets visibles.',
+    details: ['Acétate épais', 'Pont en trou de serrure', 'Rivets à trois points'],
+    colourways: [C.black, C.havana, C.crystal],
+    dimensions: dims(46, 24, 145, 41),
+    lensCapability: ['plano', 'single-vision', 'progressive', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'ray-ban-clubmaster-optics',
+    brand: 'ray-ban',
+    name: 'Clubmaster Optics',
+    reference: 'RX5154',
+    category: 'optical',
+    shape: 'square',
+    material: 'acetate-metal',
+    gender: 'unisex',
+    price: 520, // PLACEHOLDER
+    createdAt: '2026-08-30',
+    photo: 'clubmasterRx',
+    description: 'La forme sourcil des années cinquante : un trait d’acétate au-dessus, un cercle de métal en dessous.',
+    details: ['Sourcils en acétate', 'Cerclage métal', 'Plaquettes réglables'],
+    colourways: [C.havana, C.black],
+    dimensions: dims(51, 21, 145, 42),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+  {
+    kind: 'frame',
+    slug: 'lindberg-strip-titanium',
+    brand: 'lindberg',
+    name: 'Strip Titanium',
+    category: 'optical',
+    shape: 'rectangular',
+    material: 'titanium',
+    gender: 'unisex',
+    price: 2450, // PLACEHOLDER
+    createdAt: '2026-07-15',
+    photo: 'lindberg',
+    description: 'Du fil de titane, sans vis ni soudure. Quelques grammes à peine — on oublie qu’on la porte.',
+    details: ['Titane pur', 'Sans vis ni soudure', 'Branches à mémoire de forme'],
+    colourways: [C.silver, C.gold],
+    dimensions: dims(50, 19, 140, 36),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+  {
+    kind: 'frame',
+    slug: 'mykita-lite',
+    brand: 'mykita',
+    name: 'Collection Lite',
+    category: 'optical',
+    shape: 'round',
+    material: 'stainless',
+    gender: 'unisex',
+    price: 1390, // PLACEHOLDER
+    createdAt: '2026-06-28',
+    photo: 'mykita',
+    description: 'Acier inoxydable plié à Berlin, charnière sans vis. Une ronde fine qui disparaît sur le visage.',
+    details: ['Acier inoxydable', 'Charnière sans vis', 'Fabriquée à Berlin'],
+    colourways: [C.black, C.silver],
+    dimensions: dims(47, 21, 145, 42),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+  {
+    kind: 'frame',
+    slug: 'garrett-leight-wilson',
+    brand: 'garrett-leight',
+    name: 'Wilson',
+    category: 'optical',
+    shape: 'round',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 1150, // PLACEHOLDER
+    createdAt: '2026-09-05',
+    photo: 'wilson',
+    description: 'Le pantos californien par excellence, ici en cristal — il laisse passer la lumière et la couleur de la peau.',
+    details: ['Acétate cristal', 'Âme métallique visible', 'Fabriquée au Japon'],
+    colourways: [C.crystal, C.havana, C.black],
+    dimensions: dims(47, 20, 145, 41),
+    lensCapability: ['plano', 'single-vision', 'progressive', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'tom-ford-papillon-optique',
+    brand: 'tom-ford',
+    name: 'Papillon optique',
+    category: 'optical',
+    shape: 'cat-eye',
+    material: 'acetate',
+    gender: 'women',
+    price: 1190, // PLACEHOLDER
+    createdAt: '2026-08-18',
+    photo: 'tfOptical',
+    description: 'Un œil de chat net, souligné par le T en métal sur la charnière. Noir profond, angles tendus.',
+    details: ['Acétate noir poli', 'Logo T sur la charnière', 'Monture fine au nez'],
+    colourways: [C.black, C.havana],
+    dimensions: dims(52, 16, 140, 41),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+
+  /* ── Solaire ── */
+  {
+    kind: 'frame',
+    slug: 'ray-ban-wayfarer',
+    brand: 'ray-ban',
+    name: 'Original Wayfarer',
+    reference: 'RB2140',
+    category: 'sun',
+    shape: 'square',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 590, // PLACEHOLDER
+    createdAt: '2026-09-25',
+    photo: 'wayfarer',
+    featured: true,
+    description: 'La forme qui a tout changé en 1952. Verres G-15 et face inclinée, toujours aussi juste.',
+    details: ['Verres G-15 en cristal', 'Protection UV400', 'Acétate noir brillant'],
+    colourways: [C.black, C.havana],
+    dimensions: dims(50, 22, 150, 41),
+    lensCapability: ['plano', 'single-vision', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'ray-ban-aviator-classic',
+    brand: 'ray-ban',
+    name: 'Aviator Classic',
+    reference: 'RB3025',
+    category: 'sun',
+    shape: 'aviator',
+    material: 'stainless',
+    gender: 'unisex',
+    price: 560, // PLACEHOLDER
+    createdAt: '2026-09-10',
+    photo: 'aviator',
+    description: 'Le dessin d’origine, conçu pour les pilotes en 1937. Double pont, verres en goutte, métal doré.',
+    details: ['Verres G-15', 'Double pont', 'Plaquettes réglables'],
+    colourways: [C.gold, C.silver],
+    dimensions: dims(58, 14, 135, 50),
+    lensCapability: ['plano', 'single-vision', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'gucci-aviateur-hexagonal',
+    brand: 'gucci',
+    name: 'Aviateur hexagonal',
+    category: 'sun',
+    shape: 'aviator',
+    material: 'stainless',
+    gender: 'unisex',
+    price: 1490, // PLACEHOLDER
+    createdAt: '2026-08-05',
+    photo: 'gucciHex',
+    description: 'L’aviateur revu en hexagone, double barre fine et verres teintés vert d’eau.',
+    details: ['Métal doré', 'Verres teintés', 'Pochette Gucci incluse'],
+    colourways: [C.gold],
+    dimensions: dims(56, 16, 145, 48),
+    lensCapability: ['plano', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'persol-714',
+    brand: 'persol',
+    name: '714 Pliante',
+    reference: 'PO0714',
+    category: 'sun',
+    shape: 'square',
+    material: 'acetate',
+    gender: 'men',
+    price: 990, // PLACEHOLDER
+    createdAt: '2026-09-18',
+    photo: 'persol714',
+    featured: true,
+    description: 'La solaire qui se plie en quatre, celle de Steve McQueen. Acétate Havane, verres cristal.',
+    details: ['Pont et branches pliants', 'Flèche Supreme', 'Verres en cristal'],
+    colourways: [C.havana, C.black],
+    dimensions: dims(52, 22, 140, 46),
+    lensCapability: ['plano', 'single-vision', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'celine-triomphe',
+    brand: 'celine',
+    name: 'Triomphe',
+    category: 'sun',
+    shape: 'cat-eye',
+    material: 'acetate',
+    gender: 'women',
+    price: 1590, // PLACEHOLDER
+    createdAt: '2026-09-22',
+    photo: 'triomphe',
+    featured: true,
+    description: 'L’œil de chat de Celine, le logo Triomphe en métal doré posé sur la branche.',
+    details: ['Acétate Havane', 'Logo Triomphe en métal', 'Protection UV400'],
+    colourways: [C.havana, C.black],
+    dimensions: dims(55, 18, 145, 47),
+    lensCapability: ['plano', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'saint-laurent-sl-276-mica',
+    brand: 'saint-laurent',
+    name: 'SL 276 Mica',
+    reference: 'SL 276',
+    category: 'sun',
+    shape: 'cat-eye',
+    material: 'acetate',
+    gender: 'women',
+    price: 1190, // PLACEHOLDER
+    createdAt: '2026-08-26',
+    photo: 'sl276',
+    description: 'Un papillon étroit et tendu, noir sur noir. La solaire de nuit de Saint Laurent.',
+    details: ['Acétate noir', 'Verres gris foncé', 'Charnière cinq barils'],
+    colourways: [C.black],
+    dimensions: dims(49, 21, 145, 40),
+    lensCapability: ['plano', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'prada-symbole',
+    brand: 'prada',
+    name: 'Symbole',
+    reference: 'PR 17WS',
+    category: 'sun',
+    shape: 'cat-eye',
+    material: 'acetate',
+    gender: 'women',
+    price: 1350, // PLACEHOLDER
+    createdAt: '2026-07-30',
+    photo: 'symbole',
+    description: 'Des branches sculptées en triangle, le logo Prada en relief. Une silhouette qui se reconnaît de loin.',
+    details: ['Branches sculptées', 'Logo triangle en relief', 'Verres gris'],
+    colourways: [C.black],
+    dimensions: dims(49, 20, 145, 44),
+    lensCapability: ['plano', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'tom-ford-snowdon',
+    brand: 'tom-ford',
+    name: 'Snowdon',
+    reference: 'FT0237',
+    category: 'sun',
+    shape: 'square',
+    material: 'acetate',
+    gender: 'men',
+    price: 1290, // PLACEHOLDER
+    createdAt: '2026-08-12',
+    photo: 'snowdon',
+    description: 'Le carré épais porté par Bond dans Spectre. Rivets en T, verres verts profonds.',
+    details: ['Acétate noir', 'Rivets en T', 'Verres verts'],
+    colourways: [C.black, C.havana],
+    dimensions: dims(50, 20, 145, 45),
+    lensCapability: ['plano', 'single-vision', 'sun'],
+  },
+  {
+    kind: 'frame',
+    slug: 'santos-de-cartier',
+    brand: 'cartier',
+    name: 'Santos de Cartier',
+    category: 'sun',
+    shape: 'rectangular',
+    material: 'titanium',
+    gender: 'men',
+    price: 4900, // PLACEHOLDER
+    createdAt: '2026-09-02',
+    photo: 'santos',
+    featured: true,
+    description: 'Les vis apparentes de la montre Santos, reprises sur une monture en métal doré finition brossée.',
+    details: ['Métal finition or', 'Vis apparentes Santos', 'Verres fumés'],
+    colourways: [C.gold],
+    dimensions: dims(57, 17, 140, 44),
+    lensCapability: ['plano', 'single-vision', 'sun'],
+  },
+
+  /* ── Lumière bleue ── */
+  {
+    kind: 'frame',
+    slug: 'ray-ban-new-wayfarer-optics',
+    brand: 'ray-ban',
+    name: 'New Wayfarer Optics',
+    reference: 'RX5184',
+    category: 'blue-light',
+    shape: 'square',
+    material: 'acetate',
+    gender: 'unisex',
+    price: 610, // PLACEHOLDER
+    createdAt: '2026-09-15',
+    photo: 'rbBlue',
+    description: 'La Wayfarer en version optique et transparente, montée avec un verre filtrant pour les longues journées d’écran.',
+    details: ['Acétate transparent', 'Filtre lumière bleue', 'Traitement antireflet'],
+    colourways: [C.crystal, C.black],
+    dimensions: dims(52, 18, 145, 40),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+  {
+    kind: 'frame',
+    slug: 'oliver-peoples-mp-2',
+    brand: 'oliver-peoples',
+    name: 'MP-2',
+    category: 'blue-light',
+    shape: 'round',
+    material: 'acetate-metal',
+    gender: 'unisex',
+    price: 1240, // PLACEHOLDER
+    createdAt: '2026-08-22',
+    photo: 'mp2',
+    description: 'Une ronde métal aux cercles fins, rehaussée d’acétate. Montée ici avec un filtre lumière bleue.',
+    details: ['Métal et acétate', 'Filtre lumière bleue', 'Plaquettes titane'],
+    colourways: [C.gold, C.black],
+    dimensions: dims(48, 24, 145, 42),
+    lensCapability: ['plano', 'single-vision', 'progressive'],
+  },
+
+  /* ── Enfants ── */
+  {
+    kind: 'frame',
+    slug: 'ray-ban-junior-ry1531',
+    brand: 'ray-ban',
+    name: 'Junior',
+    reference: 'RY1531',
+    category: 'kids',
+    shape: 'rectangular',
+    material: 'acetate',
+    gender: 'kids',
+    price: 390, // PLACEHOLDER
+    createdAt: '2026-09-08',
+    photo: 'junior',
+    description: 'Un rectangle robuste pour les 7–12 ans, avec des charnières flexibles qui encaissent la récréation.',
+    details: ['Charnières flexibles', 'Acétate résistant', 'Ajustage gratuit deux ans'],
+    colourways: [C.black, C.havana],
+    dimensions: dims(48, 16, 130, 32),
+    lensCapability: ['plano', 'single-vision'],
+  },
+  {
+    kind: 'frame',
+    slug: 'ray-ban-junior-round',
+    brand: 'ray-ban',
+    name: 'Junior Round',
+    category: 'kids',
+    shape: 'round',
+    material: 'acetate',
+    gender: 'kids',
+    price: 360, // PLACEHOLDER
+    createdAt: '2026-07-24',
+    photo: 'juniorRound',
+    description: 'La ronde à taille d’enfant. Légère, elle tient sans glisser grâce à un pont bas.',
+    details: ['Pont bas', 'Branches à embouts souples', 'Verres incassables'],
+    colourways: [C.black],
+    dimensions: dims(44, 18, 125, 38),
+    lensCapability: ['plano', 'single-vision'],
+  },
+  {
+    kind: 'frame',
+    slug: 'nano-vista-flex',
+    brand: 'nano-vista',
+    name: 'Gamme Flex',
+    category: 'kids',
+    shape: 'rectangular',
+    material: 'bio-acetate',
+    gender: 'kids',
+    price: 320, // PLACEHOLDER
+    createdAt: '2026-06-30',
+    photo: 'nanovista',
+    description: 'Des montures en matériau souple et quasi incassable, en couleurs que les enfants choisissent eux-mêmes.',
+    details: ['Matériau flexible', 'Sans vis', 'Bandeau de maintien en option'],
+    colourways: [{ id: 'couleurs', name: 'Couleurs', family: 'colour', swatch: ['#4f8fd6', '#e05a9a'] }, C.black],
+    dimensions: dims(44, 16, 125, 34),
+    lensCapability: ['plano', 'single-vision'],
+  },
+]
+
+/* ── Accessoires (gamme maison) ── */
+const accessories: Accessory[] = [
+  {
+    kind: 'accessory',
+    slug: 'etui-rigide',
+    brand: 'maison',
+    name: 'Étui rigide',
+    category: 'accessories',
+    accessory: 'hard-case',
+    price: 85, // PLACEHOLDER
+    createdAt: '2026-09-18',
+    photo: 'caseHard',
+    description: 'Une coque rigide qui ferme par aimant, doublée de feutrine. Celle qui voyage.',
+    details: ['Coque rigide', 'Fermeture aimantée', 'Doublure feutrine'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'etui-cuir',
+    brand: 'maison',
+    name: 'Étui en cuir',
+    category: 'accessories',
+    accessory: 'leather-case',
+    price: 140, // PLACEHOLDER
+    createdAt: '2026-09-01',
+    photo: 'caseLeather',
+    description: 'Cuir pleine fleur, rabat et pression. Il se patine avec le temps.',
+    details: ['Cuir pleine fleur', 'Fermeture à pression', 'Gravure possible'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'pochette-velours',
+    brand: 'maison',
+    name: 'Pochette en velours',
+    category: 'accessories',
+    accessory: 'pochette',
+    price: 45, // PLACEHOLDER
+    createdAt: '2026-08-20',
+    photo: 'pochette',
+    description: 'Un velours doux fermé par un cordon, qui sert aussi de chiffon. Celle qu’on glisse dans un sac.',
+    details: ['Velours doux', 'Cordon de serrage', 'Lavable à 30°'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'chamoisine',
+    brand: 'maison',
+    name: 'Chamoisine microfibre',
+    category: 'accessories',
+    accessory: 'cloth',
+    price: 18, // PLACEHOLDER
+    createdAt: '2026-07-12',
+    photo: 'cloth',
+    description: 'Une vraie microfibre de 180 g/m², assez grande pour tenir les deux verres.',
+    details: ['180 g/m², 18 × 18 cm', 'Sans risque pour l’antireflet', 'Vendue à l’unité'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'kit-entretien',
+    brand: 'maison',
+    name: 'Kit d’entretien',
+    category: 'accessories',
+    accessory: 'care-kit',
+    price: 40, // PLACEHOLDER
+    createdAt: '2026-08-02',
+    photo: 'kit',
+    description: 'Spray sans alcool, chamoisine et un petit tournevis. Rechargeable en boutique.',
+    details: ['Spray sans alcool 30 ml', 'Chamoisine', 'Tournevis de précision'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'chaine-lunettes',
+    brand: 'maison',
+    name: 'Chaîne de lunettes',
+    category: 'accessories',
+    accessory: 'chain',
+    price: 95, // PLACEHOLDER
+    createdAt: '2026-08-08',
+    photo: 'chain',
+    description: 'Une chaîne fine en métal argenté, embouts en silicone. Elle tombe juste à la clavicule.',
+    details: ['Métal argenté, 70 cm', 'Embouts silicone', 'Convient aux branches jusqu’à 7 mm'],
+  },
+  {
+    kind: 'accessory',
+    slug: 'coffret-cadeau',
+    brand: 'maison',
+    name: 'Coffret cadeau',
+    category: 'accessories',
+    accessory: 'gift-box',
+    price: 60, // PLACEHOLDER
+    createdAt: '2026-09-22',
+    photo: 'giftBox',
+    description: 'Un coffret rigide blanc, ruban noir et carte écrite à la main, préparé pendant que vous attendez.',
+    details: ['Carton rigide', 'Ruban et carte inclus', 'Initiales gravées sur l’étui'],
+  },
+]
+
+export const products: Product[] = [...frames, ...accessories]
+export const allFrames = frames
+export const allAccessories = accessories
+
+export function getProduct(slug: string): Product | undefined {
+  return products.find((p) => p.slug === slug)
+}
+
+export function featuredFrames(): Frame[] {
+  return frames.filter((f) => f.featured).slice(0, 6)
+}
+
+/** Related products for the product page: same category first, then same house. */
+export function relatedTo(slug: string, limit = 3): Product[] {
+  const base = getProduct(slug)
+  if (!base) return products.slice(0, limit)
+  const score = (p: Product) => (p.category === base.category ? 2 : 0) + (p.brand === base.brand ? 1 : 0)
+  return products
+    .filter((p) => p.slug !== slug)
+    .sort((a, b) => score(b) - score(a))
+    .slice(0, limit)
+}
+
+export const priceBounds = (() => {
+  const values = products.map((p) => p.price)
+  return { min: Math.min(...values), max: Math.max(...values) }
+})()

@@ -1,0 +1,420 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════ TOKENS ═══════════════════════════
+ * The source of truth. Tailwind utilities reference these by name, so a
+ * theme block that overrides a token restyles every utility using it.
+ * Editorial black, warm white type, one vermilion accent.
+ * ============================================================== */
+
+:root {
+  --bg: #0a0a0a;
+  --paper: #131313;
+  --paper-2: #1b1b1b;
+  --ink: #f2f0eb;
+  --ink-2: #bdbab4;
+  --ink-3: #8c8984;
+  --line: rgba(242, 240, 235, 0.12);
+  --line-strong: rgba(242, 240, 235, 0.28);
+  /* The colour that sits on an --ink fill (pills, active chips). */
+  --ink-inv: #0a0a0a;
+
+  /* The hero word over the footage. Re-sampled from the clip at runtime. */
+  --ghost: #dedfe1;
+
+  /* One accent, used sparingly: indices, the active state, focus. */
+  --accent: #e4572e;
+  /* Accent at a weight that carries body-size text at AA on --bg. */
+  --accent-text: #ef6a43;
+
+  --panel: #f2f0eb;
+  --on-panel: #0a0a0a;
+  --on-panel-2: #3b3a37;
+  --on-panel-3: #5f5d58;
+  --line-on-panel: rgba(10, 10, 10, 0.14);
+
+  --shadow-card: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+
+  --gutter: 16px;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+
+  color-scheme: dark;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --gutter: 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --gutter: 64px;
+  }
+}
+
+/* ─────────────── SUN MODE ───────────────
+ * Applied to <html> by <ThemeProvider> while the visitor is in the Sun
+ * category; every colour crossfades over .8s. Warmer black, amber accent.
+ * -------------------------------------- */
+
+:root[data-theme='sun'] {
+  --bg: #0f0b07;
+  --paper: #1a140d;
+  --paper-2: #231b12;
+  --ink: #f6eee2;
+  --ink-2: #cdbfa9;
+  --ink-3: #9c8d77;
+  --line: rgba(246, 238, 226, 0.12);
+  --line-strong: rgba(246, 238, 226, 0.28);
+  --ink-inv: #0f0b07;
+  --accent: #e8a33d;
+  --accent-text: #f0b45a;
+  --panel: #f6eee2;
+  --on-panel: #0f0b07;
+  --on-panel-2: #463a2c;
+  --on-panel-3: #6b5c49;
+}
+
+/* Over light footage or light panels, the same names resolve dark. */
+@utility on-light {
+  --ink: #0a0a0a;
+  --ink-2: #33322f;
+  --ink-3: #55534e;
+  --line: rgba(10, 10, 10, 0.14);
+  --line-strong: rgba(10, 10, 10, 0.3);
+  --ink-inv: #f2f0eb;
+  --accent-text: #b8401c;
+  color: var(--ink);
+}
+
+/* Back to the dark values, inside an `on-light` area (e.g. the hero's stat cards). */
+@utility on-dark {
+  --ink: #f2f0eb;
+  --ink-2: #bdbab4;
+  --ink-3: #8c8984;
+  --line: rgba(242, 240, 235, 0.12);
+  --line-strong: rgba(242, 240, 235, 0.28);
+  --ink-inv: #0a0a0a;
+  --accent-text: #ef6a43;
+  color: var(--ink);
+}
+
+/* ═══════════════════════ TAILWIND THEME ═══════════════════════
+ * `inline` emits var(--bg) rather than a copy of the value, which is
+ * what lets SUN MODE and `on-light` re-theme utilities live.
+ * ============================================================== */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-inv: var(--ink-inv);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ghost: var(--ghost);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-panel: var(--panel);
+  --color-on-panel: var(--on-panel);
+  --color-on-panel-2: var(--on-panel-2);
+  --color-on-panel-3: var(--on-panel-3);
+  --color-line-on-panel: var(--line-on-panel);
+
+  --font-display: var(--font-instrument), 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-sans: var(--font-geist), 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+    sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --ease-focus: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --shadow-card: var(--shadow-card);
+}
+
+/* ═══════════════════════════ BASE ═══════════════════════════ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-3) transparent;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* clip, not hidden — hidden on body breaks position: sticky */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #0a0a0a;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* ═══════════════════════ UTILITIES ═══════════════════════ */
+
+@utility shell {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/** Small uppercase label for eyebrows, indices and metadata. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility label-sm {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/** Display italic — the emphasised word in every headline. */
+@utility display-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════ MOTION PRIMITIVES ═══════════════════
+ * The focus motif. Elements ship blurred and <Focus> sharpens them, so
+ * nothing flashes sharp before hydration.
+ * ======================================================= */
+
+.focus-hidden {
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(1.02);
+  will-change: opacity, filter, transform;
+}
+
+.focus-shown {
+  opacity: 1;
+  /* none, not blur(0): a lingering filter would trap fixed descendants. */
+  filter: none;
+  transform: none;
+  transition:
+    opacity 1.1s var(--ease),
+    filter 1.1s var(--ease),
+    transform 1.1s var(--ease);
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.line-mask > span {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 0.9s var(--ease);
+  will-change: transform;
+}
+
+.line-mask[data-shown='true'] > span {
+  transform: none;
+}
+
+/* Above the fold the same reveals run from first paint in pure CSS, so the
+   largest text on a page never waits for hydration to become visible. */
+.focus-auto {
+  animation: focus-in 1.1s var(--ease) both;
+}
+
+.line-mask[data-auto] > span {
+  animation: line-in 0.9s var(--ease) both;
+}
+
+@keyframes focus-in {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes line-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* A focus pull: what an image does when it changes under the lens. */
+@keyframes focus-pull {
+  from {
+    opacity: 0.2;
+    filter: blur(12px);
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* Logo wall: a slow, continuous drift. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* SUN MODE crossfade — present only for the .8s of a theme switch. */
+html.theme-shifting *,
+html.theme-shifting *::before,
+html.theme-shifting *::after {
+  transition-property: background-color, color, border-color, fill, stroke, box-shadow !important;
+  transition-duration: 0.8s !important;
+  transition-timing-function: var(--ease) !important;
+}
+
+/* Repeat visits in a session: the inline head script hides the preloader before paint. */
+html[data-preloaded] [data-preloader] {
+  display: none;
+}
+
+/* Hide the native cursor only where the lens cursor is active. */
+[data-lens-cursor='on'],
+[data-lens-cursor='on'] a,
+[data-lens-cursor='on'] button {
+  cursor: none;
+}
+
+/* Screen-reader-only, still focusable. */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ═══════════════════ REDUCED MOTION ═══════════════════
+ * No Lenis, no pinning, no blur, instant reveals. The page is complete
+ * and composed with every one of these switched off.
+ * ====================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .focus-hidden,
+  .focus-shown {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .line-mask > span {
+    transform: none !important;
+  }
+
+  [data-preloader] {
+    display: none;
+  }
+}
