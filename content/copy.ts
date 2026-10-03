@@ -29,11 +29,12 @@ export const hero = {
     { value: '15', unit: 'maisons', label: 'En boutique' },
   ],
   strip: {
-    /** What the clip shows: a fitting. */
-    plate: 'Pl. 01 — L’essayage',
+    /** What the film shows: from the optician's chart, through the glass, to a fitting. */
+    plate: 'Pl. 01 — À travers le verre',
     replay: 'Revoir',
   },
-  videoAlt: 'Une femme blonde déplie une paire de lunettes noires, la pose sur son nez, baisse les mains et sourit.',
+  videoAlt:
+    'Une monture fine posée sur une planche d’anneaux de Landolt ; la caméra s’approche et traverse le verre. De l’autre côté, une femme blonde déplie une paire de lunettes noires, la pose sur son nez et sourit.',
 }
 
 export const manifesto = {
@@ -403,10 +404,14 @@ export const bookingEmail = {
 
 export const credits = {
   title: 'Crédits',
-  blurb: 'Les photographies de ce site viennent d’Unsplash, la vidéo d’accueil de Pexels. Merci à leurs auteurs.',
+  blurb: 'Les photographies de ce site viennent d’Unsplash, les deux plans du film d’accueil de Pexels. Merci à leurs auteurs.',
   photoBy: 'Photo',
   on: 'sur Unsplash',
-  video: { label: 'Vidéo d’accueil', author: 'Pexels', href: 'https://www.pexels.com/video/6006380/' },
+  /** The two shots of the hero film. */
+  videos: [
+    { label: 'Film d’accueil, plan 1', author: 'Pexels', href: 'https://www.pexels.com/video/5995502/' },
+    { label: 'Film d’accueil, plan 2', author: 'Pexels', href: 'https://www.pexels.com/video/6006380/' },
+  ],
   logos: 'Les logos des maisons sont des marques déposées, reproduits pour signaler les collections disponibles en boutique.',
 }
 

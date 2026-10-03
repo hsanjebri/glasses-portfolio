@@ -32,13 +32,15 @@ export default function CreditsPage() {
       </header>
 
       <ul className="grid gap-x-10 border-t border-line sm:grid-cols-2 lg:grid-cols-3">
-        <li className="flex items-baseline justify-between gap-4 border-b border-line py-4">
-          <span className="label text-ink-3">{credits.video.label}</span>
-          <a href={credits.video.href} target="_blank" rel="noreferrer noopener" className="text-ink underline-offset-4 hover:underline">
-            {credits.video.author}
-            <span className="sr-only"> {a11y.newTab}</span>
-          </a>
-        </li>
+        {credits.videos.map((v) => (
+          <li key={v.href} className="flex items-baseline justify-between gap-4 border-b border-line py-4">
+            <span className="label text-ink-3">{v.label}</span>
+            <a href={v.href} target="_blank" rel="noreferrer noopener" className="text-ink underline-offset-4 hover:underline">
+              {v.author}
+              <span className="sr-only"> {a11y.newTab}</span>
+            </a>
+          </li>
+        ))}
         {authors.map(([name, { url, pages }]) => (
           <li key={name} className="flex items-baseline justify-between gap-4 border-b border-line py-4">
             <a href={`${url}?utm_source=regard&utm_medium=referral`} target="_blank" rel="noreferrer noopener" className="text-ink underline-offset-4 hover:underline">

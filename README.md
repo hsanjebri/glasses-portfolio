@@ -4,7 +4,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 
 > **Regard** is a placeholder name. Brand, address, prices and photos all live in `/content` and can be swapped without touching a component. See [Before launch](#before-launch).
 
-![Hero — a woman puts on a pair of glasses and smiles](docs/screenshots/hero-desktop.jpg)
+![Hero — the film ends on a woman wearing her new glasses](docs/screenshots/hero-desktop.jpg)
 
 ---
 
@@ -28,7 +28,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 
 **Focus.** Everything on the site arrives the way an image sharpens when you put glasses on: blur to sharp, never bouncy, never sliding far.
 
-- **The hero clip** is a fitting: a woman unfolds a pair of glasses, puts them on, lowers her hands and smiles. The footage is slowed 1.8× with motion-compensated interpolation, so the gesture plays as smooth slow motion, and the clip holds on that smile. The copy waits for the glasses to settle (`REVEAL_AT = 2.6 s`) and runs its own blur-to-sharp reveal in step with the footage. Phones get their own 4:5 portrait cut of the clip, framed on her face and hands.
+- **The hero film** is two shots joined through a lens. It opens on a thin metal frame on an optician's chart of Landolt rings, the focus pulling through the lenses. The camera pushes into the right lens; the lens fills with the second shot, the rim sweeps past in a soft bloom of light, and the camera comes out pulling back and levelling off from a slight roll, like a drone. In the second shot a woman unfolds a pair of glasses, puts them on and smiles (slowed 1.8× with motion-compensated interpolation), and the film holds on that smile. The copy waits for the camera to settle (`REVEAL_AT = 5 s`) and runs its own blur-to-sharp reveal in step with the footage. Phones get their own 4:5 portrait cut of the film.
 - **The wordmark** sits on the bare wall to her left with `mix-blend-mode: darken`, so her hair, darker than the letters, passes in front of it. It shows from 900 px up; on a phone it would cross her face.
 - **Every reveal** uses one primitive, `<Focus>`: opacity 0, `blur(14px)`, `scale(1.02)` → sharp in 1.1 s, staggered.
 - **Page transitions** are a lens aperture: a `clip-path` iris closes on the click point and opens on the new page.
@@ -168,10 +168,10 @@ Nothing brand-specific is hard-coded in a component.
 
 ```ts
 // lib/motion.ts
-export const REVEAL_AT = 2.6
+export const REVEAL_AT = 5
 ```
 
-This is the second of the hero clip at which the copy starts arriving. In the current clip the glasses settle on her face at about 2.6 s, and the clip ends at 4.0 s as she lowers her hands and smiles. **To change it, edit that one number.** If you swap the clip, set it to the moment the footage settles. The hero reveals anyway on `ended`, on a video `error`, on a rejected `play()`, and after a 9 s timeout.
+This is the second of the hero clip at which the copy starts arriving. In the current film the camera passes through the lens at about 4 s and settles on the second shot by 5.3 s; she puts the glasses on and the film ends at 7.5 s on her smile. **To change it, edit that one number.** If you swap the clip, set it to the moment the footage settles. The hero reveals anyway on `ended`, on a video `error`, on a rejected `play()`, and after a 9 s timeout.
 
 The stat-card thumbnails are cut from the clip's last frame: the glasses and her earring. Their crop rectangles are `CROPS` at the top of `components/sections/Hero.tsx`, given for the landscape clip and converted for the portrait cut through `PORTRAIT`.
 
@@ -210,7 +210,7 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 ## Media, licences and credits
 
 - **Photography.** [Unsplash](https://unsplash.com/license), hot-linked from Unsplash's CDN as their API guidelines require. Every photographer is credited on `/credits`. All 50 photos have been registered with Unsplash's download endpoint (`npm run photos`), which the guidelines also ask for.
-- **Hero footage.** [Pexels, video 6006380](https://www.pexels.com/video/6006380/) under the Pexels licence (free for commercial use, no attribution required; credited on `/credits` anyway). Slowed 1.8× with motion-compensated interpolation, ending once her hands are down and she smiles, and encoded at 1920 px plus a 720×900 portrait cut for phones, muted, faststart.
+- **Hero footage.** Two Pexels clips, [5995502](https://www.pexels.com/video/5995502/) (the frame on the chart) and [6006380](https://www.pexels.com/video/6006380/) (the fitting), under the Pexels licence (free for commercial use, no attribution required; credited on `/credits` anyway). The film is rendered frame by frame (camera zoom, roll, blur, the lens-shaped reveal and the bloom) and encoded at 1920 px (2.2 MB) plus a 720×900 portrait cut for phones (0.8 MB), muted, faststart.
 - **Brand logos.** Public-domain text marks from Wikimedia Commons, in `public/brands/`. **They remain registered trademarks.** They are shown to indicate collections carried in store, which presumes the client is an authorised stockist (see the launch checklist). The Moscot file had its yellow sign background removed so it renders as a mark.
 - **Testimonials.** The quotes are text only, on purpose: stock photos of real people next to invented reviews would present strangers as customers.
 

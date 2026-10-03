@@ -28,8 +28,10 @@ const fmt = (s: number) => {
 }
 
 /**
- * The hero. Real footage, slowed: a woman unfolds a pair of glasses, puts
- * them on, lowers her hands and smiles; the clip holds on that smile. On desktop the
+ * The hero. One film in two shots: a thin frame on an optician's chart, the
+ * camera pushing into its right lens; through the glass, a woman unfolding a
+ * pair of glasses, the camera pulling back and levelling off like a drone. She
+ * puts them on and smiles; the film holds on that smile. On desktop the
  * brand word sits over the bare wall to her left in darken blend, so her hair,
  * darker than the word, passes in front of it. Nothing typographic moves until
  * the clip reaches REVEAL_AT.
@@ -184,7 +186,7 @@ export function Hero() {
       aria-labelledby="hero-title"
       // Phones: the clip starts under the header, which would otherwise sit on her glasses.
       className="relative isolate bg-bg pt-16 min-[900px]:pt-0"
-      style={{ ['--hero-bg' as string]: '#aab4b5', ['--ghost' as string]: '#969e9f' }}
+      style={{ ['--hero-bg' as string]: '#bcbbc0', ['--ghost' as string]: '#a5a4a9' }}
     >
       {/* ── Stage ── */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--hero-bg)] min-[900px]:aspect-auto min-[900px]:h-svh">
@@ -291,7 +293,7 @@ export function Hero() {
                   <span ref={fill} className="absolute inset-0 origin-left bg-ink" style={{ transform: 'scaleX(0)' }} />
                 </span>
                 <span ref={time} className="label tnum text-ink-3">
-                  00:00 / 00:04
+                  00:00 / 00:07
                 </span>
               </div>
               <button
