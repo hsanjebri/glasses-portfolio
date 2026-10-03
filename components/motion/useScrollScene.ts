@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, type DependencyList, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useRef, type DependencyList, type RefObject } from 'react'
 
 import { afterIdle, loadGsap, type GsapKit } from '@/lib/gsap'
 import { prefersReducedMotion } from '@/lib/hooks'
@@ -23,11 +23,22 @@ export function useScrollScene(
   deps: DependencyList = [],
   { when = true }: { when?: boolean } = {},
 ) {
+  const revertRef = useRef<(() => void) | null>(null)
+
+  // Undo the scene before React removes the section's DOM on unmount: layout
+  // cleanups run ahead of node removal, passive ones only after it.
+  useLayoutEffect(
+    () => () => {
+      revertRef.current?.()
+      revertRef.current = null
+    },
+    [],
+  )
+
   useEffect(() => {
     const root = ref.current
     if (!root || !when || prefersReducedMotion()) return
 
-    let revert: (() => void) | undefined
     let dead = false
 
     let built = false
@@ -41,7 +52,7 @@ export function useScrollScene(
       const ctx = kit.gsap.context(() => {
         extra = scene(kit, root)
       }, root)
-      revert = () => {
+      revertRef.current = () => {
         extra?.()
         ctx.revert()
       }
@@ -62,7 +73,8 @@ export function useScrollScene(
     return () => {
       dead = true
       io.disconnect()
-      revert?.()
+      revertRef.current?.()
+      revertRef.current = null
     }
     // The scene closure is rebuilt only when the caller's deps change.
   }, [ref, when, ...deps])
