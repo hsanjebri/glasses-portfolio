@@ -15,8 +15,8 @@ import { useUi } from '@/lib/ui-store'
 
 /** Where the two stat thumbnails are cut from the clip's last frame: x, y, w, h as fractions (square in pixels). */
 const CROPS: [number, number, number, number][] = [
-  [0.5, 0.13, 0.22, 0.39], // the glasses, on her face
-  [0.39, 0.17, 0.15, 0.27], // her hand on the frame
+  [0.44, 0, 0.2, 0.356], // the glasses, on her face
+  [0.415, 0.37, 0.09, 0.16], // her earring
 ]
 
 /** The phone clip (hero-portrait.mp4) is a 4:5 window on the same footage: its left edge and width as fractions. */
@@ -29,7 +29,7 @@ const fmt = (s: number) => {
 
 /**
  * The hero. Real footage, slowed: a woman unfolds a pair of glasses, puts
- * them on and looks into the lens; the clip holds on that look. On desktop the
+ * them on, lowers her hands and smiles; the clip holds on that smile. On desktop the
  * brand word sits over the bare wall to her left in darken blend, so her hair,
  * darker than the word, passes in front of it. Nothing typographic moves until
  * the clip reaches REVEAL_AT.
@@ -182,7 +182,8 @@ export function Hero() {
     <section
       ref={section}
       aria-labelledby="hero-title"
-      className="relative isolate bg-bg"
+      // Phones: the clip starts under the header, which would otherwise sit on her glasses.
+      className="relative isolate bg-bg pt-16 min-[900px]:pt-0"
       style={{ ['--hero-bg' as string]: '#aab4b5', ['--ghost' as string]: '#969e9f' }}
     >
       {/* ── Stage ── */}
@@ -290,7 +291,7 @@ export function Hero() {
                   <span ref={fill} className="absolute inset-0 origin-left bg-ink" style={{ transform: 'scaleX(0)' }} />
                 </span>
                 <span ref={time} className="label tnum text-ink-3">
-                  00:00 / 00:03
+                  00:00 / 00:04
                 </span>
               </div>
               <button

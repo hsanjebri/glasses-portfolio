@@ -261,13 +261,13 @@ export function BookingForm() {
                       checked={day === d.iso}
                       disabled={disabled}
                       onChange={() => pickDay(d.iso)}
-                      aria-label={disabled ? `${d.long} — ${d.open ? f.full : f.closed}` : d.long}
+                      aria-label={disabled ? `${d.long} — ${d.open ? f.over : f.closed}` : d.long}
                       className="peer sr-only"
                     />
                     <span className="flex h-[92px] w-[66px] flex-col items-center justify-center gap-1.5 rounded-[4px] border border-line-strong text-ink transition-colors duration-300 ease-focus group-hover:border-ink-2 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-ink-inv peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-text peer-disabled:border-line peer-disabled:text-ink-3">
                       <span className="label-sm">{d.today ? f.today : d.weekday}</span>
                       <span className="tnum font-display text-[30px] leading-none">{d.day}</span>
-                      <span className="label-sm">{disabled ? (d.open ? f.full : f.closed) : d.month}</span>
+                      <span className="label-sm">{disabled ? (d.open ? f.over : f.closed) : d.month}</span>
                     </span>
                   </label>
                 )

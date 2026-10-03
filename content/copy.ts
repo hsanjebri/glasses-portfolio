@@ -33,7 +33,7 @@ export const hero = {
     plate: 'Pl. 01 — L’essayage',
     replay: 'Revoir',
   },
-  videoAlt: 'Une femme blonde déplie une paire de lunettes noires, la pose sur son nez et regarde l’objectif.',
+  videoAlt: 'Une femme blonde déplie une paire de lunettes noires, la pose sur son nez, baisse les mains et sourit.',
 }
 
 export const manifesto = {
@@ -195,8 +195,8 @@ export const visit = {
     morning: 'Matin',
     afternoon: 'Après-midi',
     pickDayFirst: 'Choisissez d’abord un jour.',
-    /** A day that is open but has no slot left (today, late in the day). */
-    full: 'Complet',
+    /** Today, once its last slot has passed. */
+    over: 'Terminé',
     reasons: ['Essayer des montures', 'Faire faire mes verres', 'Lunettes de soleil', 'Ajustement ou réparation'],
     name: { label: 'Nom', placeholder: 'Votre nom' },
     contact: { label: 'Téléphone ou e-mail', placeholder: 'Pour vous confirmer le créneau' },

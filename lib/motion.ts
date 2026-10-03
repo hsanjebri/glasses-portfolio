@@ -22,16 +22,16 @@ export const FOCUS_BLUR = 14
 /**
  * ───────────────────────────────────────────────────────────────────────────
  * REVEAL_AT — the second of the hero clip at which the copy starts arriving.
- * In /public/video/hero-*.mp4 the glasses settle on her face at ~2.3 s and
- * she looks into the lens as the clip ends at 3.4 s; the copy's own
- * blur-to-sharp reveal (1.1 s) arrives with that look.
+ * In /public/video/hero-*.mp4 the glasses settle on her face at ~2.6 s; her
+ * hands come down and she smiles as the clip ends at 4.0 s. The copy's own
+ * blur-to-sharp reveal (1.1 s) arrives as the glasses settle.
  *
  * To change it: edit this number. Nothing else needs touching. If the clip is
  * shorter than this value the hero still reveals, because `ended`, `error`, a
  * rejected play() and a 9 s timeout each trigger the same reveal.
  * ───────────────────────────────────────────────────────────────────────────
  */
-export const REVEAL_AT = 2.3
+export const REVEAL_AT = 2.6
 
 /** Hard ceiling on the hero wait, however the video behaves. */
 export const REVEAL_TIMEOUT_MS = 9000
