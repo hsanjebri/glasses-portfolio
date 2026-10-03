@@ -343,6 +343,20 @@
   }
 }
 
+/* Configurator preview: a new shot, or a new material, fading in over the last. */
+@keyframes plate-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes shimmer {
   to {
     transform: translateX(300%);

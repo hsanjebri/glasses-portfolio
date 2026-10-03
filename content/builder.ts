@@ -54,17 +54,28 @@ export const shapeOptions: ShapeOption[] = [
   { id: 'oversized', label: 'Oversize', blurb: 'Verres profonds, couverture large. Idéale en progressifs.', priceDelta: 70, photo: 'shapeOversized' }, // PLACEHOLDER
 ]
 
-export type BuilderColourway = Colourway & { priceDelta: number; blurb: string }
+/** How a material is painted onto the frame in the preview photo. */
+export type Finish =
+  /** Mottled acetate: a base tone with dark patches and warm highlights. */
+  | { kind: 'tortoise'; base: string; mottle: string; amber: string }
+  /** Polished single-colour acetate. */
+  | { kind: 'solid'; base: string }
+  /** Clear acetate that lets light through. */
+  | { kind: 'crystal'; tint: string }
+  /** A metal front: wire rims, brushed. */
+  | { kind: 'metal'; base: string; roughness: number }
+
+export type BuilderColourway = Colourway & { priceDelta: number; blurb: string; finish: Finish }
 
 /** Materials offered in the configurator. PLACEHOLDER — names and prices. */
 export const builderColourways: BuilderColourway[] = [
-  { id: 'havane', name: 'Havane', family: 'tortoise', swatch: ['#6b4423', '#2b1a0e'], priceDelta: 0, blurb: 'Écaille chaude, le motif court d’un cercle à l’autre.' },
-  { id: 'noir', name: 'Noir', family: 'black', swatch: ['#111111', '#2a2a2a'], priceDelta: 0, blurb: 'Noir profond, rien à remarquer — c’est le but.' },
-  { id: 'cristal', name: 'Cristal', family: 'crystal', swatch: ['#d9dcdf', '#f4f5f6'], priceDelta: 0, blurb: 'Transparent, laisse voir l’âme métallique.' },
-  { id: 'ecaille-blonde', name: 'Écaille blonde', family: 'tortoise', swatch: ['#b07a3c', '#5a3818'], priceDelta: 30, blurb: 'Une écaille miel, plus claire et plus lumineuse.' }, // PLACEHOLDER
-  { id: 'olive', name: 'Olive fumé', family: 'colour', swatch: ['#4a4e33', '#1f2113'], priceDelta: 40, blurb: 'Une écaille verte. Deux plaques par an seulement.' }, // PLACEHOLDER
-  { id: 'titane', name: 'Titane naturel', family: 'silver', swatch: ['#a9adb0', '#dfe1e2'], priceDelta: 180, blurb: 'Face en métal : la plus légère, la plus solide.' }, // PLACEHOLDER
-  { id: 'or-brosse', name: 'Or brossé', family: 'gold', swatch: ['#c2a054', '#e6cf8e'], priceDelta: 160, blurb: 'Face en métal, brossée pour ne pas briller.' }, // PLACEHOLDER
+  { id: 'havane', name: 'Havane', family: 'tortoise', swatch: ['#6b4423', '#2b1a0e'], priceDelta: 0, blurb: 'Écaille chaude, le motif court d’un cercle à l’autre.', finish: { kind: 'tortoise', base: '#7a4a20', mottle: '#22130a', amber: '#c4843f' } },
+  { id: 'noir', name: 'Noir', family: 'black', swatch: ['#111111', '#2a2a2a'], priceDelta: 0, blurb: 'Noir profond, rien à remarquer — c’est le but.', finish: { kind: 'solid', base: '#0c0c0c' } },
+  { id: 'cristal', name: 'Cristal', family: 'crystal', swatch: ['#d9dcdf', '#f4f5f6'], priceDelta: 0, blurb: 'Transparent, laisse voir l’âme métallique.', finish: { kind: 'crystal', tint: '#eef1f3' } },
+  { id: 'ecaille-blonde', name: 'Écaille blonde', family: 'tortoise', swatch: ['#b07a3c', '#5a3818'], priceDelta: 30, blurb: 'Une écaille miel, plus claire et plus lumineuse.', finish: { kind: 'tortoise', base: '#c08a45', mottle: '#5a3312', amber: '#eab46c' } }, // PLACEHOLDER
+  { id: 'olive', name: 'Olive fumé', family: 'colour', swatch: ['#4a4e33', '#1f2113'], priceDelta: 40, blurb: 'Une écaille verte. Deux plaques par an seulement.', finish: { kind: 'tortoise', base: '#5b6141', mottle: '#1c2011', amber: '#8e955f' } }, // PLACEHOLDER
+  { id: 'titane', name: 'Titane naturel', family: 'silver', swatch: ['#a9adb0', '#dfe1e2'], priceDelta: 180, blurb: 'Face en métal : la plus légère, la plus solide.', finish: { kind: 'metal', base: '#b9bec2', roughness: 0.34 } }, // PLACEHOLDER
+  { id: 'or-brosse', name: 'Or brossé', family: 'gold', swatch: ['#c2a054', '#e6cf8e'], priceDelta: 160, blurb: 'Face en métal, brossée pour ne pas briller.', finish: { kind: 'metal', base: '#d2ad62', roughness: 0.3 } }, // PLACEHOLDER
 ]
 
 export const sizeOptions: BuilderOption<SizeKey>[] = [

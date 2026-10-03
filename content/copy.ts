@@ -348,7 +348,13 @@ export const builder = {
     sizeLine: (label: string) => `Taille ${label.toLowerCase()}`,
     totalAnnounce: (t: string) => `Total : ${t}`,
   },
-  preview: { label: 'Aperçu', note: 'Photo indicative de la forme — la matière choisie est dans la pastille.' },
+  preview: {
+    label: 'Aperçu',
+    /** The frame is a representative photo of the shape, recoloured: say so. */
+    note: 'Rendu indicatif',
+    tray: 'Dans l’écrin',
+    describe: (shape: string, material: string, lens: string) => `Monture ${shape.toLowerCase()} en ${material.toLowerCase()}, ${lens.toLowerCase()}`,
+  },
   reset: 'Recommencer',
 }
 
