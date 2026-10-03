@@ -90,7 +90,6 @@ export interface Accessory extends ProductBase {
 export type Product = Frame | Accessory
 
 export const isFrame = (p: Product): p is Frame => p.kind === 'frame'
-export const isAccessory = (p: Product): p is Accessory => p.kind === 'accessory'
 
 /* ───────────── Catalogue state — all of it lives in the URL ───────────── */
 

@@ -12,11 +12,14 @@ import { TheBox } from '@/components/sections/TheBox'
 import { TwoWorlds } from '@/components/sections/TwoWorlds'
 import { Visit } from '@/components/sections/Visit'
 import { Voices } from '@/components/sections/Voices'
+import { JsonLd } from '@/components/seo/JsonLd'
 import { featuredFrames } from '@/content/products'
+import { opticianSchema } from '@/lib/structured-data'
 
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={opticianSchema()} />
       <Preloader />
       <Hero />
       {/* Each section is its own Suspense boundary, so hydration runs in

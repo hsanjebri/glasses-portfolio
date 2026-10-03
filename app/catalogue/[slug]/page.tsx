@@ -4,11 +4,13 @@ import { Suspense } from 'react'
 
 import { ProductCard } from '@/components/catalogue/ProductCard'
 import { ProductView } from '@/components/catalogue/ProductView'
+import { JsonLd } from '@/components/seo/JsonLd'
 import { Focus } from '@/components/motion/Focus'
 import { brands } from '@/content/brands'
 import { product as copy } from '@/content/copy'
 import { photos } from '@/content/photos'
 import { getProduct, products, relatedTo } from '@/content/products'
+import { productSchema } from '@/lib/structured-data'
 
 type Params = { params: Promise<{ slug: string }> }
 
@@ -44,6 +46,7 @@ export default async function ProductPage({ params }: Params) {
 
   return (
     <div className="shell pb-28 pt-24 md:pt-32">
+      <JsonLd data={productSchema(product)} />
       <ProductView product={product} />
 
       <section aria-labelledby="related-title" className="mt-28 md:mt-40">

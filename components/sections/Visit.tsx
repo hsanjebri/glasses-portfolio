@@ -2,7 +2,7 @@ import { Photo } from '@/components/media/Photo'
 import { Focus } from '@/components/motion/Focus'
 import { SectionHead } from '@/components/ui/SectionHead'
 import { a11y, visit } from '@/content/copy'
-import { site } from '@/content/site'
+import { hoursLabel, site } from '@/content/site'
 
 import { BookingForm } from './BookingForm'
 
@@ -65,7 +65,7 @@ export function Visit() {
                       <th scope="row" className="py-2 text-left font-normal text-ink-2">
                         {h.day}
                       </th>
-                      <td className={`tnum py-2 text-right ${h.open ? 'text-ink' : 'text-ink-3'}`}>{h.open ?? visit.closed}</td>
+                      <td className={`tnum py-2 text-right ${h.opens ? 'text-ink' : 'text-ink-3'}`}>{hoursLabel(h) ?? visit.closed}</td>
                     </tr>
                   ))}
                 </tbody>

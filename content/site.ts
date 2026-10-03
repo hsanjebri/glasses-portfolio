@@ -1,3 +1,15 @@
+/** PLACEHOLDER — the shop's position. The coordinates label is built from it. */
+const GEO = { latitude: 36.8783, longitude: 10.3247 }
+
+export interface OpeningHours {
+  day: string
+  /** schema.org day name, for search engines. */
+  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
+  /** 24 h "HH:MM", or null when closed. */
+  opens: string | null
+  closes: string | null
+}
+
 /**
  * Every brand-specific value on the site. Change it here and the giant hero
  * word, the nav, the footer, the Open Graph image and the metadata follow.
@@ -23,24 +35,28 @@ export const site = {
     district: 'Marsa Plage',
     city: 'La Marsa, Tunis',
     country: 'Tunisie',
+    /** The same address, split for search engines. */
+    locality: 'La Marsa',
+    region: 'Tunis',
+    countryCode: 'TN',
   },
 
   // PLACEHOLDER — opens Google Maps on the address
   mapsUrl: 'https://maps.google.com/?q=La+Marsa+Plage+Tunis',
 
-  // PLACEHOLDER — coordinates shown in the hero strip
-  coordinates: '36.8783° N — 10.3247° E',
+  geo: GEO,
+  coordinates: `${GEO.latitude}° N — ${GEO.longitude}° E`,
 
-  // PLACEHOLDER — opening hours. `open: null` renders as "Fermé".
+  // PLACEHOLDER — opening hours, 24 h. `opens: null` renders as "Fermé".
   hours: [
-    { day: 'Lundi', open: '9 h 30 — 19 h' },
-    { day: 'Mardi', open: '9 h 30 — 19 h' },
-    { day: 'Mercredi', open: '9 h 30 — 19 h' },
-    { day: 'Jeudi', open: '9 h 30 — 19 h' },
-    { day: 'Vendredi', open: '9 h 30 — 19 h' },
-    { day: 'Samedi', open: '10 h — 18 h' },
-    { day: 'Dimanche', open: null },
-  ] as { day: string; open: string | null }[],
+    { day: 'Lundi', dayOfWeek: 'Monday', opens: '09:30', closes: '19:00' },
+    { day: 'Mardi', dayOfWeek: 'Tuesday', opens: '09:30', closes: '19:00' },
+    { day: 'Mercredi', dayOfWeek: 'Wednesday', opens: '09:30', closes: '19:00' },
+    { day: 'Jeudi', dayOfWeek: 'Thursday', opens: '09:30', closes: '19:00' },
+    { day: 'Vendredi', dayOfWeek: 'Friday', opens: '09:30', closes: '19:00' },
+    { day: 'Samedi', dayOfWeek: 'Saturday', opens: '10:00', closes: '18:00' },
+    { day: 'Dimanche', dayOfWeek: 'Sunday', opens: null, closes: null },
+  ] as OpeningHours[],
 
   // PLACEHOLDER — phone, displayed as written
   phone: '+216 71 000 000',
@@ -68,5 +84,16 @@ export const brandWord = site.brand.display.join('')
 export function formatPrice(amount: number): string {
   return `${Math.round(amount)
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${site.currency}`
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f')}\u00a0${site.currency}`
+}
+
+/** "09:30" → "9 h 30", "19:00" → "19 h" — the way hours are written in French. */
+const frTime = (t: string) => {
+  const [h = '0', m = '00'] = t.split(':')
+  return m === '00' ? `${Number(h)} h` : `${Number(h)} h ${m}`
+}
+
+/** "9 h 30 — 19 h", or null when the shop is closed that day. */
+export function hoursLabel(h: OpeningHours): string | null {
+  return h.opens && h.closes ? `${frTime(h.opens)} — ${frTime(h.closes)}` : null
 }

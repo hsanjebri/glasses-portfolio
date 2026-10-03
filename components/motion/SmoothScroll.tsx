@@ -4,7 +4,7 @@ import Lenis from 'lenis'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 import { attachLenis } from '@/lib/gsap'
-import { useReducedMotion } from '@/lib/hooks'
+import { useFinePointer, useReducedMotion } from '@/lib/hooks'
 
 const LenisContext = createContext<Lenis | null>(null)
 
@@ -13,15 +13,18 @@ export const useLenis = () => useContext(LenisContext)
 
 /**
  * Lenis smooth scrolling on its own animation frame, so GSAP can stay out of
- * the initial bundle; ScrollTrigger hooks into it when a scene loads. Switched
- * off entirely under prefers-reduced-motion — native scroll takes over.
+ * the initial bundle; ScrollTrigger hooks into it when a scene loads. Only for
+ * mouse and trackpad: touch keeps native scrolling (which Lenis would not
+ * change anyway) without a loop running every frame, and reduced motion
+ * switches it off entirely.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion()
+  const fine = useFinePointer()
   const [lenis, setLenis] = useState<Lenis | null>(null)
 
   useEffect(() => {
-    if (reduced) return
+    if (reduced || !fine) return
 
     const instance = new Lenis({
       duration: 1.15,
@@ -40,7 +43,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       instance.destroy()
       setLenis(null)
     }
-  }, [reduced])
+  }, [reduced, fine])
 
   return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>
 }

@@ -60,11 +60,11 @@ export function SummaryBar() {
   const message = [
     whatsapp.intro,
     '',
-    `${whatsapp.configLabel} :`,
+    `${whatsapp.configLabel}\u00a0:`,
     ...q.lines.map((l) => `• ${l.label}${l.qty > 1 ? ` ×${l.qty}` : ''} — ${lineAmount(l.amount)}`),
     '',
-    `${whatsapp.totalLabel} : ${formatPrice(q.total)}`,
-    `${whatsapp.linkLabel} : ${buildUrl}`,
+    `${whatsapp.totalLabel}\u00a0: ${formatPrice(q.total)}`,
+    `${whatsapp.linkLabel}\u00a0: ${buildUrl}`,
   ].join('\n')
 
   return (

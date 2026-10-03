@@ -544,7 +544,6 @@ const accessories: Accessory[] = [
 
 export const products: Product[] = [...frames, ...accessories]
 export const allFrames = frames
-export const allAccessories = accessories
 
 export function getProduct(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug)

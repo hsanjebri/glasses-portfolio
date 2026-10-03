@@ -1,8 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react'
-
-export const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+import { useSyncExternalStore } from 'react'
 
 function subscribeMedia(query: string) {
   return (onChange: () => void) => {
@@ -35,11 +33,4 @@ export const useIsMobile = () => useMediaQuery('(max-width: 899.98px)')
 /** Non-reactive read, for use inside effects and event handlers. */
 export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
-/** True once the component has mounted on the client. */
-export function useMounted(): boolean {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  return mounted
 }

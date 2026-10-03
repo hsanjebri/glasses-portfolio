@@ -72,7 +72,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 | State | **Zustand** for the configurator |
 | Type | Instrument Serif (display), Geist (text), Geist Mono (labels), via `next/font` |
 | Images | `next/image` with a custom loader that sizes Unsplash photos on Unsplash's CDN |
-| Backend | None. Orders go out as a WhatsApp deep link; bookings post to a stub route handler. |
+| Backend | One route handler. Orders go out as a WhatsApp deep link; bookings are emailed through [Resend](https://resend.com) when configured, and handed to WhatsApp otherwise. |
 
 No UI kit, no component library, no template.
 
@@ -96,9 +96,16 @@ npm run dev                  # http://localhost:3000
 
 ### Environment
 
+All optional; copy `.env.example` to `.env.local`.
+
 | Variable | Needed for |
 |---|---|
+| `RESEND_API_KEY` | Emailing booking requests to the shop |
+| `BOOKING_TO_EMAIL` | The inbox that receives them |
+| `BOOKING_FROM_EMAIL` | Sender on a domain verified in Resend (defaults to `onboarding@resend.dev`) |
 | `UNSPLASH_ACCESS_KEY` | `npm run photos` only. The site never calls the Unsplash API at runtime: photos are pinned in `content/photos.ts` and served from Unsplash's CDN. |
+
+Without the three booking variables the site still works: the form hands each request to a pre-filled WhatsApp message instead of claiming it was sent.
 
 ## Project structure
 
@@ -109,7 +116,7 @@ app/
   catalogue/[slug]/        product pages, statically generated
   composer/                the configurator
   credits/                 photographers and footage
-  api/booking/route.ts     stub booking endpoint
+  api/booking/route.ts     booking endpoint — validates, emails via Resend if configured
   opengraph-image.tsx      share image, generated from the brand word
   icon.tsx, apple-icon.tsx favicons from the two-circle mark
   sitemap.ts, robots.ts
@@ -123,6 +130,7 @@ components/
   catalogue/               Catalogue, Filters, ProductCard, ProductView, SizeDiagram
   builder/                 Builder, Preview, Steps, Choices, OptionIcon, SummaryBar
   ui/                      Pill, SectionHead, BrandWord, FitWord
+  seo/JsonLd.tsx           schema.org blocks (Optician on the home page, Product per product)
 content/                   ← everything you edit lives here
   site.ts                  name, tagline, address, hours, phone, WhatsApp, socials, domain
   copy.ts                  every string on the site, in French
@@ -132,7 +140,7 @@ content/                   ← everything you edit lives here
   photos.ts                every photograph: URL, size, colour, alt text, credit
   types.ts                 the data model
 lib/                       builder logic (URL codec, validation, quote), catalogue
-                           filtering, motion constants, image loader, hooks
+                           filtering, structured data, motion constants, image loader, hooks
 public/
   video/                   hero clip (1920 and 960 px) and posters
   brands/                  brand logo SVGs
@@ -147,7 +155,7 @@ Nothing brand-specific is hard-coded in a component.
 | To change… | Edit |
 |---|---|
 | The shop's name (hero word, nav, footer, metadata, share image) | `content/site.ts` → `brand` |
-| Address, hours, phone, WhatsApp number, socials, domain | `content/site.ts` |
+| Address, map position, hours, phone, WhatsApp number, socials, domain | `content/site.ts` (hours are 24 h `opens`/`closes`; the French display and the search-engine data are both built from them) |
 | Any sentence on the site | `content/copy.ts` |
 | A product, its price, colourways, measurements | `content/products.ts` |
 | Configurator options and prices | `content/builder.ts` |
@@ -173,6 +181,9 @@ The stat-card thumbnails are cut from the clip's last frame. Their crop rectangl
 - **Catalogue.** All state lives in the URL (`?category=sun&brand=ray-ban,persol&sort=price-asc`), written with the History API, so every view is a shareable link and Back walks through category changes. Cards animate with layout transitions and leave by blurring out.
 - **Configurator.** The whole configuration is a readable query string (`/composer?shape=cat-eye&cw=noir&lens=sun&coat=polarised&case=leather&gift=1&eng=SM`). It is restored on load and mirrored to `localStorage`. Invalid combinations are declared as data in `content/builder.ts`: polarised only with sun lenses, aviators in metal only, engraving only with the gift box. They render disabled with the reason shown, and are normalised away if they arrive in a link.
 - **Orders.** "Commander sur WhatsApp" opens `wa.me/<number>` with the itemised configuration, the total and a link back to it. "Prendre rendez-vous avec cette configuration" opens the booking form with the build attached.
+- **Bookings.** The form posts to `/api/booking`, which validates the request and emails it to the shop when Resend is configured (replies go straight to the visitor if they left an email). If email isn't configured or the request fails, the form says so and offers the same request as a pre-filled WhatsApp message, so a booking is never silently lost. A hidden honeypot field drops spam bots.
+- **Search engines.** The home page carries an `Optician` schema (address, coordinates, opening hours, phone) and each product page a `Product` schema (brand, reference, photo, price in TND, in-store availability). Product pages share their own photo as the Open Graph image.
+- **Headers.** Every response sends `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` and HSTS. The video and logos are cached for a week. A Content Security Policy is left out because it would need nonces for Next's inline scripts.
 - **Lens cursor.** On desktop, a 90 px ring trails the pointer. Over product photos it becomes a 1.6× loupe; over links it shrinks to a dot with a label. It is off on touch and under reduced motion.
 
 ## Before launch
@@ -187,13 +198,15 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 - [ ] **Configurator prices.** `builder.ts`: base price and every delta
 - [ ] **Testimonials.** `copy.ts` → `voices`: all three are invented
 - [ ] **Stats.** `copy.ts` → `hero.stats` and `atelier.stats`
-- [ ] **Booking.** `app/api/booking/route.ts` validates and acknowledges but stores nothing. Wire it to email, a calendar or a CRM.
-- [ ] **Unsplash.** Run `npm run photos` once with a key in `.env.local`
+- [ ] **Booking emails.** Create a Resend account, verify the shop's domain, and set `RESEND_API_KEY`, `BOOKING_TO_EMAIL` and `BOOKING_FROM_EMAIL`. Until then bookings arrive through WhatsApp.
+- [ ] **Map position.** `site.ts` → `GEO` (it drives the coordinates label and the search-engine data)
+- [ ] **Legal page.** A *mentions légales* / privacy notice. The booking form collects names and phone numbers, and the wording has to come from the client.
+- [ ] **Unsplash.** If you change any photo, run `npm run photos` again (all 50 current photos are registered)
 - [ ] **Domain.** Set `site.url` so canonical URLs, the sitemap and share links are right
 
 ## Media, licences and credits
 
-- **Photography.** [Unsplash](https://unsplash.com/license), hot-linked from Unsplash's CDN as their API guidelines require. Every photographer is credited on `/credits`. `npm run photos` registers each use with Unsplash's download endpoint, which the guidelines also ask for.
+- **Photography.** [Unsplash](https://unsplash.com/license), hot-linked from Unsplash's CDN as their API guidelines require. Every photographer is credited on `/credits`. All 50 photos have been registered with Unsplash's download endpoint (`npm run photos`), which the guidelines also ask for.
 - **Hero footage.** [Pexels, video 5995502](https://www.pexels.com/video/5995502/) under the Pexels licence (free for commercial use, no attribution required; credited on `/credits` anyway). Re-encoded to 1920 px (1.0 MB) and 960 px (238 KB), muted, faststart.
 - **Brand logos.** Public-domain text marks from Wikimedia Commons, in `public/brands/`. **They remain registered trademarks.** They are shown to indicate collections carried in store, which presumes the client is an authorised stockist (see the launch checklist). The Moscot file had its yellow sign background removed so it renders as a mark.
 - **Testimonials.** The quotes are text only, on purpose: stock photos of real people next to invented reviews would present strangers as customers.
@@ -208,7 +221,10 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 | Keyboard | ✅ skip link, visible focus rings, mobile menu traps focus and closes on Escape, filter sheet traps focus |
 | Reduced motion | ✅ no Lenis, no pinning, no blur; every section renders complete at rest |
 | Configurator logic | ✅ scripted test: polarised gating, metal-only aviator, engraving tied to the gift box, totals, URL round-trip, `localStorage` restore, WhatsApp message |
-| Lighthouse (mobile) | ⚠️ **not measured on this build.** An earlier build scored Accessibility 97–100, Best Practices 100, SEO 100 and CLS 0, but Performance 64–84, below the 90 target. The home page is constrained by design: the preloader plus a 3.6 s reveal delays its largest content. |
+| Booking | ✅ scripted test: validation, honeypot, `delivered: false` without email → WhatsApp hand-off carrying name, contact, date and the attached frame |
+| Structured data and headers | ✅ verified on the built site |
+| Layout shift (CLS) | ✅ 0.000 on home, catalogue, a product page and the configurator (emulated phone, 4× CPU slowdown) |
+| Lighthouse (mobile) | ⚠️ **not measured on this build.** An earlier build scored Accessibility 97–100, Best Practices 100, SEO 100 and CLS 0, but Performance 64–84, below the 90 target. Since then: the catalogue no longer runs a blur on every photo at load, card labels use solid fills instead of backdrop blur, and smooth scrolling no longer runs its loop on touch devices. The home page stays constrained by design, because the preloader plus a 3.6 s reveal delays its largest text. Measure on Vercel (PageSpeed Insights) rather than locally: CPU-throttled runs on the development machine varied by more than 5× between identical loads. |
 
 Animation is limited to `transform`, `opacity`, `filter` and `clip-path`. Fonts, video and images reserve their space, so the page doesn't shift.
 

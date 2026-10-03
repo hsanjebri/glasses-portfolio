@@ -7,14 +7,11 @@ import { DUR } from '@/lib/motion'
 type Theme = 'day' | 'sun'
 
 type Ctx = {
-  theme: Theme
   /** Register a request for SUN MODE. Returns the release function. */
   requestSun: () => () => void
 }
 
-const ThemeContext = createContext<Ctx>({ theme: 'day', requestSun: () => () => {} })
-
-export const useTheme = () => useContext(ThemeContext).theme
+const ThemeContext = createContext<Ctx>({ requestSun: () => () => {} })
 
 /**
  * Owns the data-theme attribute on <html>. Pages ask for SUN MODE by mounting
@@ -40,7 +37,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => setRequests((n) => Math.max(0, n - 1))
   }, [])
 
-  const value = useMemo(() => ({ theme, requestSun }), [theme, requestSun])
+  const value = useMemo(() => ({ requestSun }), [requestSun])
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }

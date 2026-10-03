@@ -5,19 +5,12 @@
 
 /** The only easing curve used on the site. */
 export const EASE = [0.2, 0.7, 0.1, 1] as const
-export const EASE_CSS = 'cubic-bezier(.2,.7,.1,1)'
 
 export const DUR = {
-  /** The focus reveal: blur to sharp. */
-  focus: 1.1,
-  /** Pill hovers, chips, small state changes. */
-  quick: 0.4,
   /** Lens aperture open/close on route change. */
   aperture: 0.75,
   /** Theme crossfade into and out of SUN MODE. */
   theme: 0.8,
-  /** Line masks in a split headline. */
-  line: 0.9,
 } as const
 
 /** Seconds between successive items in a staggered focus reveal. */

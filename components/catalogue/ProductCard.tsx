@@ -17,6 +17,9 @@ import { isFrame, type Product } from '@/content/types'
  */
 export function ProductCard({ product, headingLevel = 'h3' }: { product: Product; headingLevel?: 'h2' | 'h3' }) {
   const [cwIndex, setCwIndex] = useState(0)
+  // The focus pull plays when a chip switches the photo, not on first paint:
+  // a grid of cards all blurring in at once is expensive to paint on phones.
+  const [switched, setSwitched] = useState(false)
   const frame = isFrame(product) ? product : null
   const colourway = frame?.colourways[cwIndex]
   const photo = colourway?.photo ?? product.photo
@@ -26,7 +29,7 @@ export function ProductCard({ product, headingLevel = 'h3' }: { product: Product
   return (
     <article className="group relative flex h-full flex-col gap-4">
       <div className="relative overflow-hidden rounded-[4px] bg-paper" data-cursor="magnify">
-        <div key={photo} className="animate-[focus-pull_.7s_cubic-bezier(.2,.7,.1,1)_both]">
+        <div key={photo} className={switched ? 'animate-[focus-pull_.7s_cubic-bezier(.2,.7,.1,1)_both]' : undefined}>
           <Photo
             photo={photo}
             ratio="4 / 5"
@@ -34,11 +37,11 @@ export function ProductCard({ product, headingLevel = 'h3' }: { product: Product
             imgClassName="transition-transform duration-[1.2s] ease-focus group-hover:rotate-[-1.5deg] group-hover:scale-[1.05] motion-reduce:!transform-none"
           />
         </div>
-        <span className="label absolute left-3 top-3 rounded-full bg-bg/70 px-2.5 py-1.5 text-ink backdrop-blur-sm">{labels[product.category]}</span>
+        <span className="label absolute left-3 top-3 rounded-full bg-bg/85 px-2.5 py-1.5 text-ink">{labels[product.category]}</span>
 
         {frame && frame.colourways.length > 1 ? (
           <div
-            className="absolute inset-x-3 bottom-3 z-[2] flex translate-y-1 items-center gap-1.5 rounded-full bg-bg/75 p-1 pr-3 opacity-0 backdrop-blur-sm transition-[opacity,transform] duration-500 ease-focus group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
+            className="absolute inset-x-3 bottom-3 z-[2] flex translate-y-1 items-center gap-1.5 rounded-full bg-bg/90 p-1 pr-3 opacity-0 transition-[opacity,transform] duration-500 ease-focus group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
             role="group"
             aria-label={`${product.name} — ${catalogue.card.colourways(frame.colourways.length)}`}
           >
@@ -46,7 +49,10 @@ export function ProductCard({ product, headingLevel = 'h3' }: { product: Product
               <button
                 key={c.id}
                 type="button"
-                onClick={() => setCwIndex(i)}
+                onClick={() => {
+                  setSwitched(true)
+                  setCwIndex(i)
+                }}
                 aria-pressed={i === cwIndex}
                 aria-label={c.name}
                 title={c.name}

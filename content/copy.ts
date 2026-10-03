@@ -37,8 +37,6 @@ export const hero = {
     'Une monture fine posée sur une planche d’anneaux de Landolt ; la mise au point passe de la monture au tableau, à travers les verres.',
 }
 
-export const preloader = { label: 'Mise au point' }
-
 export const manifesto = {
   label: 'Manifeste',
   sentence:
@@ -195,8 +193,14 @@ export const visit = {
     submit: 'Demander un créneau',
     sending: 'Envoi…',
     success: 'C’est noté. Nous vous confirmons le créneau dans la journée.',
-    error: 'L’envoi a échoué. Appelez-nous, nous vous inscrirons directement.',
+    /** Shown when the request could not be emailed: WhatsApp becomes the way it reaches the shop. */
+    lastStep: 'Dernière étape : envoyez la demande sur WhatsApp, nous la confirmons dans la journée.',
+    error: 'L’envoi a échoué. Envoyez la demande sur WhatsApp ou appelez-nous.',
+    whatsappSend: 'Envoyer sur WhatsApp',
+    whatsappAlso: 'Confirmer aussi sur WhatsApp',
     required: 'Obligatoire',
+    /** Label of the hidden anti-spam field; people never see it. */
+    honeypot: 'Laissez ce champ vide',
   },
 }
 
@@ -354,6 +358,25 @@ export const whatsapp = {
   totalLabel: 'Total',
   linkLabel: 'Lien',
   productIntro: (name: string) => `Bonjour — je suis intéressé(e) par ${name}.`,
+  booking: (b: { name: string; contact: string; date: string; note: string; attached: string }) =>
+    [
+      'Bonjour — je souhaite prendre rendez-vous pour un essayage.',
+      '',
+      `Nom : ${b.name}`,
+      `Contact : ${b.contact}`,
+      b.date ? `Jour souhaité : ${b.date}` : '',
+      b.attached ? `Concerne : ${b.attached}` : '',
+      b.note ? `Message : ${b.note}` : '',
+    ]
+      .filter((line, i) => i < 2 || line)
+      .join('\n'),
+}
+
+/** The email the shop receives for each booking request. */
+export const bookingEmail = {
+  subject: (name: string) => `Demande de rendez-vous — ${name}`,
+  intro: 'Nouvelle demande de rendez-vous depuis le site.',
+  labels: { name: 'Nom', contact: 'Contact', date: 'Jour souhaité', attached: 'Concerne', note: 'Message' },
 }
 
 export const credits = {

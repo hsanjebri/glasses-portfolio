@@ -17,11 +17,12 @@ const source = readFileSync(new URL('../content/photos.ts', import.meta.url), 'u
 const endpoints = [...source.matchAll(/download: '([^']+)'/g)].map((m) => m[1])
 
 let ok = 0
-for (const url of endpoints) {
+for (const [i, url] of endpoints.entries()) {
   const res = await fetch(url, { headers: { Authorization: `Client-ID ${key}` } })
   if (res.ok) ok++
   else console.warn(res.status, url)
-  if (res.headers.get('x-ratelimit-remaining') === '0') {
+  const last = i === endpoints.length - 1
+  if (!last && res.headers.get('x-ratelimit-remaining') === '0') {
     console.warn('Rate limit reached — run again in an hour to finish.')
     break
   }
