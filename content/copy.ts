@@ -340,6 +340,8 @@ export const builder = {
     expand: 'Voir le détail',
     collapse: 'Masquer le détail',
     base: 'Monture',
+    lensLine: (label: string) => `Verres ${label.toLowerCase()}`,
+    sizeLine: (label: string) => `Taille ${label.toLowerCase()}`,
     totalAnnounce: (t: string) => `Total : ${t}`,
   },
   preview: { label: 'Aperçu', note: 'Photo indicative de la forme — la matière choisie est dans la pastille.' },

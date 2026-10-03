@@ -39,6 +39,7 @@ export function Hero() {
   const thumbs = useRef<(HTMLCanvasElement | null)[]>([])
   const fill = useRef<HTMLSpanElement>(null)
   const time = useRef<HTMLSpanElement>(null)
+  const sampled = useRef(false)
   const [revealed, setRevealed] = useState(false)
   const [run, setRun] = useState(0)
 
@@ -67,7 +68,7 @@ export function Hero() {
   const sampleBackdrop = useCallback(() => {
     const v = video.current
     const s = section.current
-    if (!v || !s) return
+    if (!v || !s || sampled.current) return
     try {
       const c = document.createElement('canvas')
       c.width = 1
@@ -79,9 +80,11 @@ export function Hero() {
       const [r = 0, g = 0, b = 0, a = 0] = ctx.getImageData(0, 0, 1, 1).data
       // A frame that has not decoded yet reads as transparent black: keep the tokens.
       if (a === 0 || r + g + b < 120) return
-      const k = 0.955
+      // 12% darker than the backdrop: on this near-white clip a subtler ghost vanishes.
+      const k = 0.88
       s.style.setProperty('--hero-bg', `rgb(${r} ${g} ${b})`)
       s.style.setProperty('--ghost', `rgb(${Math.round(r * k)} ${Math.round(g * k)} ${Math.round(b * k)})`)
+      sampled.current = true
     } catch {
       // Tainted canvas or decode failure: the CSS tokens stay in place.
     }
@@ -123,6 +126,8 @@ export function Hero() {
       raf = requestAnimationFrame(loop)
     }
     const onTime = () => {
+      // Frames can decode after the first attempt; keep trying until a sample lands.
+      sampleBackdrop()
       if (v.currentTime >= REVEAL_AT) reveal()
     }
     const onEnded = () => {
@@ -160,7 +165,7 @@ export function Hero() {
       v.removeEventListener('error', reveal)
       v.removeEventListener('seeked', paint)
     }
-  }, [preloaded, run, reveal, captureThumbs])
+  }, [preloaded, run, reveal, captureThumbs, sampleBackdrop])
 
   const replay = () => {
     setRevealed(false)
@@ -172,7 +177,7 @@ export function Hero() {
       ref={section}
       aria-labelledby="hero-title"
       className="relative isolate bg-bg"
-      style={{ ['--hero-bg' as string]: '#e4e5e7', ['--ghost' as string]: '#dadbdd' }}
+      style={{ ['--hero-bg' as string]: '#c0c0c4', ['--ghost' as string]: '#a9a9ad' }}
     >
       {/* ── Stage ── */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--hero-bg)] min-[900px]:aspect-auto min-[900px]:h-svh">
@@ -243,7 +248,7 @@ export function Hero() {
                       width={160}
                       height={160}
                       aria-hidden="true"
-                      className="size-11 shrink-0 rounded-[12px] bg-[#e4e5e7] min-[900px]:size-16"
+                      className="size-11 shrink-0 rounded-[12px] bg-[#c0c0c4] min-[900px]:size-16"
                     />
                     <div>
                       <p className="font-display text-[30px] leading-none min-[900px]:text-[38px]">

@@ -43,7 +43,7 @@ export function ProductView({ product }: { product: Product }) {
   const photo = colourway?.photo ?? product.photo
 
   const buildHref = frame
-    ? `/build?${encodeConfig(
+    ? `/composer?${encodeConfig(
         normalize({
           ...defaultConfig,
           shape: frame.shape,

@@ -161,10 +161,10 @@ export function quote(c: BuilderConfig): Quote {
   add('frame', `${copy.summary.base} — ${shape?.label ?? c.shape}, ${cw?.name ?? c.colourway}`, BASE_PRICE + (shape?.priceDelta ?? 0) + (cw?.priceDelta ?? 0))
 
   const size = find(sizeOptions, c.size)
-  if (size?.priceDelta) add('size', `${size.label} size`, size.priceDelta)
+  if (size?.priceDelta) add('size', copy.summary.sizeLine(size.label), size.priceDelta)
 
   const lens = find(lensTypeOptions, c.lensType)
-  if (lens) add('lens', `${lens.label} lenses`, lens.priceDelta)
+  if (lens) add('lens', copy.summary.lensLine(lens.label), lens.priceDelta)
 
   const tier = find(lensTierOptions, c.lensTier)
   if (tier) add('tier', tier.label, tier.priceDelta)

@@ -56,15 +56,15 @@ export function SummaryBar() {
   const [open, setOpen] = useState(false)
 
   const qs = encodeConfig(config)
-  const buildUrl = `${site.url}/build?${qs}`
+  const buildUrl = `${site.url}/composer?${qs}`
   const message = [
     whatsapp.intro,
     '',
-    `${whatsapp.configLabel}:`,
+    `${whatsapp.configLabel} :`,
     ...q.lines.map((l) => `• ${l.label}${l.qty > 1 ? ` ×${l.qty}` : ''} — ${lineAmount(l.amount)}`),
     '',
-    `${whatsapp.totalLabel}: ${formatPrice(q.total)}`,
-    `${whatsapp.linkLabel}: ${buildUrl}`,
+    `${whatsapp.totalLabel} : ${formatPrice(q.total)}`,
+    `${whatsapp.linkLabel} : ${buildUrl}`,
   ].join('\n')
 
   return (
@@ -129,7 +129,7 @@ export function SummaryBar() {
               variant="accent"
               magnetic={false}
               className="min-h-11 flex-1 justify-between text-[13px] md:min-h-12 md:flex-none md:text-[14px]"
-              cursorLabel="Order"
+              cursorLabel="Commander"
               aria-label={copy.summary.whatsapp}
             >
               <span className="md:hidden">{copy.summary.whatsappShort}</span>
@@ -141,7 +141,7 @@ export function SummaryBar() {
               arrow={false}
               magnetic={false}
               className="min-h-11 flex-1 justify-center px-4 text-[13px] md:min-h-12 md:flex-none md:px-6 md:text-[14px]"
-              cursorLabel="Book"
+              cursorLabel="RDV"
             >
               <span className="md:hidden">{copy.summary.bookingShort}</span>
               <span className="hidden md:inline">{copy.summary.booking}</span>
