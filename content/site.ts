@@ -59,10 +59,10 @@ export const site = {
   ] as OpeningHours[],
 
   // PLACEHOLDER — phone, displayed as written
-  phone: '+216 71 000 000',
+  phone: '+216 98158363',
 
   /** PLACEHOLDER — WhatsApp number, digits only, country code first, no plus. */
-  whatsapp: '21671000000',
+  whatsapp: '21698158363',
 
   // PLACEHOLDER — social links
   socials: [
@@ -88,7 +88,7 @@ export function formatPrice(amount: number): string {
 }
 
 /** "09:30" → "9 h 30", "19:00" → "19 h" — the way hours are written in French. */
-const frTime = (t: string) => {
+export const frTime = (t: string) => {
   const [h = '0', m = '00'] = t.split(':')
   return m === '00' ? `${Number(h)} h` : `${Number(h)} h ${m}`
 }

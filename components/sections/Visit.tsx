@@ -74,7 +74,7 @@ export function Visit() {
           </Focus>
         </div>
 
-        <Focus index={2} className="on-light rounded-[4px] bg-panel p-6 md:p-10">
+        <Focus index={2} className="rounded-[4px] border border-line bg-paper p-5 sm:p-8 md:p-10">
           <BookingForm />
         </Focus>
       </div>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { bookingEmail } from '@/content/copy'
+import { site } from '@/content/site'
 
 /**
  * Booking requests. Validated here, then emailed to the shop through Resend
@@ -25,12 +26,17 @@ export async function POST(request: Request) {
   const booking = {
     name: text('name', 120),
     contact: text('contact', 160),
-    date: text('date', 40),
-    attached: text('build', 600),
+    when: text('when', 120),
+    reason: text('reason', 80),
+    attached: text('attached', 600),
     note: text('note', 1000),
+    link: '',
   }
+  // A configurator build arrives as its query string: link the shop straight to it.
+  const build = text('build', 600)
+  if (/^shape=[\w-]+&/.test(build)) booking.link = `${site.url}/composer?${build}`
 
-  const missing = (['name', 'contact'] as const).filter((k) => !booking[k])
+  const missing = (['name', 'contact', 'when'] as const).filter((k) => !booking[k])
   if (missing.length) {
     return NextResponse.json({ ok: false, error: 'Missing fields', fields: missing }, { status: 422 })
   }
