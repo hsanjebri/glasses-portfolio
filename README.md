@@ -52,7 +52,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 | ![Catalogue](docs/screenshots/catalogue.jpg) | ![Catalogue in SUN MODE](docs/screenshots/catalogue-sun.jpg) |
 | **Catalogue.** Filter by house, shape, colour, material, fit and price. Every filter lives in the URL. | **SUN MODE.** The same page, crossfaded into the warmer theme. |
 | ![Product page](docs/screenshots/product.jpg) | ![Configurator](docs/screenshots/composer.jpg) |
-| **Fiche produit.** Brand and reference, colourways, possible lenses, a measurement diagram, related frames. | **Composer.** Five steps with a live preview, engraved initials on the case, and a counting total. |
+| **Fiche produit.** Brand and reference, colourways, possible lenses, a measurement diagram, related frames. | **Composer.** Five steps with a live preview: the frame repainted in the chosen material, the lenses tinted, the case engraved. |
 
 <p align="center">
   <img src="docs/screenshots/mobile-home.jpg" width="260" alt="Home on a phone" />
@@ -128,7 +128,7 @@ components/
                            BuilderTeaser, Atelier, TheBox, Lookbook, Voices, Visit,
                            Nav, Footer, Preloader, BookingForm
   catalogue/               Catalogue, Filters, ProductCard, ProductView, SizeDiagram
-  builder/                 Builder, Preview, Steps, Choices, OptionIcon, SummaryBar
+  builder/                 Builder, Preview, PreviewStage, Steps, Choices, OptionIcon, SummaryBar
   ui/                      Pill, SectionHead, BrandWord, FitWord
   seo/JsonLd.tsx           schema.org blocks (Optician on the home page, Product per product)
 content/                   ← everything you edit lives here
@@ -137,6 +137,7 @@ content/                   ← everything you edit lives here
   products.ts              29 products: frames by house, plus house accessories
   builder.ts               configurator options and prices
   brands.ts                houses carried and their logos
+  plates.ts                where the frame and lenses sit in each shape photo (for the preview)
   photos.ts                every photograph: URL, size, colour, alt text, credit
   types.ts                 the data model
 lib/                       builder logic (URL codec, validation, quote), catalogue
@@ -180,6 +181,7 @@ The stat-card thumbnails are cut from the clip's last frame. Their crop rectangl
 - **Scroll scenes.** `useScrollScene` loads GSAP only when a scene nears the viewport, or once the page is idle. Each scene runs in a `gsap.context` scoped to its section and is reverted on unmount, so ScrollTriggers never leak between routes. Pins are measured top to bottom.
 - **Catalogue.** All state lives in the URL (`?category=sun&brand=ray-ban,persol&sort=price-asc`), written with the History API, so every view is a shareable link and Back walks through category changes. Cards animate with layout transitions and leave by blurring out.
 - **Configurator.** The whole configuration is a readable query string (`/composer?shape=cat-eye&cw=noir&lens=sun&coat=polarised&case=leather&gift=1&eng=SM`). It is restored on load and mirrored to `localStorage`. Invalid combinations are declared as data in `content/builder.ts`: polarised only with sun lenses, aviators in metal only, engraving only with the gift box. They render disabled with the reason shown, and are normalised away if they arrive in a link.
+- **Configurator preview.** The main picture is a real photograph of the chosen shape, worked on in the browser. An SVG filter repaints the frame in the chosen material: tortoiseshell is generated noise mapped through the acetate's own colours, while black, crystal, titanium and gold are flat tones. The photo's own shading is kept, so curves and highlights survive. The repaint is limited to the frame by outlines traced for each photo (`content/plates.ts`). Tinted layers go over the lenses: smoke for sun lenses, G-15 green when polarised, grey for photochromic, a warm cast for the blue filter, and a faint green sheen for anti-reflective. A new shape fades in over the last with a focus pull, a new material fades over the old frame, and a size change eases the shot closer. It is a representative rendering, labelled *Rendu indicatif*, not a photo of the exact frame.
 - **Orders.** "Commander sur WhatsApp" opens `wa.me/<number>` with the itemised configuration, the total and a link back to it. "Prendre rendez-vous avec cette configuration" opens the booking form with the build attached.
 - **Bookings.** The form posts to `/api/booking`, which validates the request and emails it to the shop when Resend is configured (replies go straight to the visitor if they left an email). If email isn't configured or the request fails, the form says so and offers the same request as a pre-filled WhatsApp message, so a booking is never silently lost. A hidden honeypot field drops spam bots.
 - **Search engines.** The home page carries an `Optician` schema (address, coordinates, opening hours, phone) and each product page a `Product` schema (brand, reference, photo, price in TND, in-store availability). Product pages share their own photo as the Open Graph image.
@@ -196,6 +198,7 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 - [ ] **Products.** `products.ts`: prices, colourway lists, descriptions, measurements
 - [ ] **Product photos.** `photos.ts`: product images are Unsplash stand-ins. Replace them with the distributors' official shots.
 - [ ] **Configurator prices.** `builder.ts`: base price and every delta
+- [ ] **Configurator photos.** `builder.ts` → `shapeOptions[].photo`: one shot per shape. The best results come from studio shots on a plain background. After swapping a photo, retrace its frame and lens outlines in `plates.ts`.
 - [ ] **Testimonials.** `copy.ts` → `voices`: all three are invented
 - [ ] **Stats.** `copy.ts` → `hero.stats` and `atelier.stats`
 - [ ] **Booking emails.** Create a Resend account, verify the shop's domain, and set `RESEND_API_KEY`, `BOOKING_TO_EMAIL` and `BOOKING_FROM_EMAIL`. Until then bookings arrive through WhatsApp.

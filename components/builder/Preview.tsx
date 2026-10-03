@@ -56,19 +56,17 @@ export function Preview() {
       </div>
 
       {/* Material, lenses, and what goes in the box */}
-      <div className="on-dark pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-3 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 pt-10 md:flex-row md:items-end md:justify-between md:p-6 md:pt-16">
+      <div className="on-dark pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3 pt-8 md:p-6 md:pt-16">
         <div className="flex items-center gap-3">
           <span
             key={cw.id}
             aria-hidden="true"
-            className="size-9 shrink-0 animate-[focus-pull_.6s_cubic-bezier(.2,.7,.1,1)_both] rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,.3)]"
+            className="size-7 shrink-0 animate-[focus-pull_.6s_cubic-bezier(.2,.7,.1,1)_both] rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,.3)] md:size-9"
             style={{ background: `radial-gradient(circle at 30% 30%, ${cw.swatch[1]}, ${cw.swatch[0]} 60%)` }}
           />
           <span className="flex flex-col">
-            <span className="font-display text-[24px] leading-none md:text-[26px]">{cw.name}</span>
-            <span className="label-sm mt-1.5 text-ink-2">
-              {lens?.label}
-            </span>
+            <span className="font-display text-[20px] leading-none md:text-[26px]">{cw.name}</span>
+            <span className="label-sm mt-1.5 text-ink-2">{lens?.label}</span>
           </span>
         </div>
 
@@ -76,7 +74,7 @@ export function Preview() {
           {tray.map((item) => (
             <li
               key={item.key}
-              className="relative w-12 shrink-0 animate-[focus-pull_.6s_cubic-bezier(.2,.7,.1,1)_both] md:w-[72px]"
+              className="relative w-9 shrink-0 animate-[focus-pull_.6s_cubic-bezier(.2,.7,.1,1)_both] md:w-[72px]"
             >
               <div className="relative overflow-hidden rounded-[3px] shadow-card ring-1 ring-white/15">
                 <Photo photo={item.photo} ratio="1 / 1" sizes="72px" alt="" />

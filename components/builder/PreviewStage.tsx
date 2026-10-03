@@ -149,7 +149,7 @@ function lensLook(lensType: LensType, coatings: CoatingId[], sunPhoto: boolean):
   const has = (c: CoatingId) => coatings.includes(c)
   const ar = has('anti-reflective')
   const glare = (v: number) => (ar ? v * 0.5 : v)
-  const sheen = ar ? 0.4 : 0
+  const sheen = ar ? (lensType === 'sun' ? 0.15 : 0.32) : 0
   if (lensType === 'sun') {
     return { tint: has('polarised') ? '#1f3d29' : '#262420', tintOpacity: sunPhoto ? 0.6 : 0.9, clear: 0, glare: glare(0.28), sheen }
   }
