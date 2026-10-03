@@ -22,6 +22,13 @@ const CROPS: [number, number, number, number][] = [
 /** The phone clip (hero-portrait.mp4) is a 4:5 window on the same footage: its left edge and width as fractions. */
 const PORTRAIT = { x: 720 / 1920, w: 864 / 1920 }
 
+/**
+ * Browsers keep /video files for a week (next.config.ts), so a re-cut film
+ * under the same name would never reach anyone who has seen the old one.
+ * Bump this whenever the files in /public/video change.
+ */
+const FILM = '?v=3'
+
 const fmt = (s: number) => {
   const t = Number.isFinite(s) ? Math.max(0, Math.floor(s)) : 0
   return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`
@@ -198,11 +205,11 @@ export function Hero() {
           muted
           playsInline
           preload="auto"
-          poster="/video/hero-poster.jpg"
+          poster={`/video/hero-poster.jpg${FILM}`}
           aria-label={hero.videoAlt}
         >
-          <source src="/video/hero-portrait.mp4" type="video/mp4" media="(max-width: 899px)" />
-          <source src="/video/hero-1920.mp4" type="video/mp4" />
+          <source src={`/video/hero-portrait.mp4${FILM}`} type="video/mp4" media="(max-width: 899px)" />
+          <source src={`/video/hero-1920.mp4${FILM}`} type="video/mp4" />
         </video>
 
         {/* Light washes on the wall side and along the foot, so the copy and the strip over the footage stay easy to read. */}

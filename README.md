@@ -162,7 +162,7 @@ Nothing brand-specific is hard-coded in a component.
 | Configurator options and prices | `content/builder.ts` |
 | The houses on the logo wall | `content/brands.ts` (`logoWall`) |
 | A photograph | `content/photos.ts`, then point a product or section at its key |
-| The hero clip | replace `public/video/hero-1920.mp4`, its 4:5 phone cut `hero-portrait.mp4` and `hero-poster.jpg` |
+| The hero clip | replace `public/video/hero-1920.mp4`, its 4:5 phone cut `hero-portrait.mp4` and `hero-poster.jpg`, then bump `FILM` at the top of `components/sections/Hero.tsx` so browsers fetch the new cut instead of their week-old copy |
 
 ### `REVEAL_AT`
 
