@@ -86,7 +86,7 @@ export function ProductView({ product }: { product: Product }) {
       {/* Details */}
       <div className="flex flex-col gap-10">
         <Focus immediate index={1} className="flex flex-col gap-5">
-          <Link href="/catalogue" className="label self-start text-ink-3 transition-colors hover:text-ink">
+          <Link href="/catalogue" className="label hit self-start text-ink-3 transition-colors hover:text-ink">
             ← {copy.back}
           </Link>
           <p className="label text-ink-2">
@@ -162,11 +162,11 @@ export function ProductView({ product }: { product: Product }) {
             <div className="rounded-[4px] border border-line p-4 md:p-6">
               <SizeDiagram frame={frame} />
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-x-6 sm:grid-cols-3">
+            <dl className="mt-4 grid grid-cols-2 gap-x-5 sm:grid-cols-3 sm:gap-x-6">
               {(Object.keys(copy.measurements) as (keyof typeof copy.measurements)[]).map((k) => (
-                <div key={k} className="flex items-baseline justify-between gap-3 border-b border-line py-3">
+                <div key={k} className="flex flex-col gap-1.5 border-b border-line py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
                   <dt className="label text-ink-3">{copy.measurements[k]}</dt>
-                  <dd className="tnum text-[15px] text-ink">{frame.dimensions[k]} mm</dd>
+                  <dd className="tnum whitespace-nowrap text-[15px] text-ink">{frame.dimensions[k]} mm</dd>
                 </div>
               ))}
             </dl>

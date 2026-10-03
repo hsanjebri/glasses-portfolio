@@ -13,11 +13,14 @@ import { prefersReducedMotion } from '@/lib/hooks'
 import { REVEAL_AT, REVEAL_TIMEOUT_MS } from '@/lib/motion'
 import { useUi } from '@/lib/ui-store'
 
-/** Where the two stat thumbnails are cut from the clip's last frame: x, y, w, h as fractions. */
+/** Where the two stat thumbnails are cut from the clip's last frame: x, y, w, h as fractions (square in pixels). */
 const CROPS: [number, number, number, number][] = [
-  [0.28, 0.18, 0.18, 0.32],
-  [0.72, 0.17, 0.2, 0.355],
+  [0.5, 0.13, 0.22, 0.39], // the glasses, on her face
+  [0.39, 0.17, 0.15, 0.27], // her hand on the frame
 ]
+
+/** The phone clip (hero-portrait.mp4) is a 4:5 window on the same footage: its left edge and width as fractions. */
+const PORTRAIT = { x: 720 / 1920, w: 864 / 1920 }
 
 const fmt = (s: number) => {
   const t = Number.isFinite(s) ? Math.max(0, Math.floor(s)) : 0
@@ -25,11 +28,11 @@ const fmt = (s: number) => {
 }
 
 /**
- * The hero. Real footage: a frame on an optician's chart, the focus pulling
- * through the lenses until the rings behind sharpen. The brand word sits above
- * the clip in darken blend — the metal rim is darker than the word and passes
- * in front of it; through the lenses the light chart loses and the word
- * shows. Nothing typographic moves until the clip reaches REVEAL_AT.
+ * The hero. Real footage, slowed: a woman unfolds a pair of glasses, puts
+ * them on and looks into the lens; the clip holds on that look. On desktop the
+ * brand word sits over the bare wall to her left in darken blend, so her hair,
+ * darker than the word, passes in front of it. Nothing typographic moves until
+ * the clip reaches REVEAL_AT.
  */
 export function Hero() {
   const preloaded = useUi((s) => s.preloaded)
@@ -52,7 +55,10 @@ export function Hero() {
   const captureThumbs = useCallback(() => {
     const v = video.current
     if (!v?.videoWidth) return
-    CROPS.forEach(([x, y, w, h], i) => {
+    const portrait = v.videoHeight > v.videoWidth
+    CROPS.forEach(([cx, y, cw, h], i) => {
+      const x = portrait ? (cx - PORTRAIT.x) / PORTRAIT.w : cx
+      const w = portrait ? cw / PORTRAIT.w : cw
       const c = thumbs.current[i]
       const ctx = c?.getContext('2d')
       if (!c || !ctx) return
@@ -80,7 +86,7 @@ export function Hero() {
       const [r = 0, g = 0, b = 0, a = 0] = ctx.getImageData(0, 0, 1, 1).data
       // A frame that has not decoded yet reads as transparent black: keep the tokens.
       if (a === 0 || r + g + b < 120) return
-      // 12% darker than the backdrop: on this near-white clip a subtler ghost vanishes.
+      // 12% darker than the backdrop: on this pale wall a subtler ghost vanishes.
       const k = 0.88
       s.style.setProperty('--hero-bg', `rgb(${r} ${g} ${b})`)
       s.style.setProperty('--ghost', `rgb(${Math.round(r * k)} ${Math.round(g * k)} ${Math.round(b * k)})`)
@@ -177,31 +183,42 @@ export function Hero() {
       ref={section}
       aria-labelledby="hero-title"
       className="relative isolate bg-bg"
-      style={{ ['--hero-bg' as string]: '#c0c0c4', ['--ghost' as string]: '#a9a9ad' }}
+      style={{ ['--hero-bg' as string]: '#aab4b5', ['--ghost' as string]: '#969e9f' }}
     >
       {/* ── Stage ── */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--hero-bg)] min-[900px]:aspect-auto min-[900px]:h-svh">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--hero-bg)] min-[900px]:aspect-auto min-[900px]:h-svh">
         <video
           ref={video}
           data-hero
-          className="absolute inset-0 h-full w-full object-cover"
+          // The poster is the landscape frame; on phones it is cut where the portrait clip is.
+          className="absolute inset-0 h-full w-full object-cover object-[60%_50%] min-[900px]:object-center"
           muted
           playsInline
           preload="auto"
           poster="/video/hero-poster.jpg"
           aria-label={hero.videoAlt}
         >
-          <source src="/video/hero-960.mp4" type="video/mp4" media="(max-width: 899px)" />
+          <source src="/video/hero-portrait.mp4" type="video/mp4" media="(max-width: 899px)" />
           <source src="/video/hero-1920.mp4" type="video/mp4" />
         </video>
 
+        {/* Light washes on the wall side and along the foot, so the copy and the strip over the footage stay easy to read. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(255,255,255,.34)_0%,rgba(255,255,255,.16)_32%,transparent_56%)] min-[900px]:block"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-40 bg-[linear-gradient(0deg,rgba(236,240,241,.92)_0%,rgba(236,240,241,.62)_38%,transparent_100%)] min-[900px]:block"
+        />
+
         <p
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-[58%] -translate-y-1/2 select-none min-[900px]:top-[34%] text-center font-display leading-[0.8] tracking-[-0.03em] text-ghost mix-blend-darken"
+          className="shell pointer-events-none absolute inset-x-0 top-[13%] hidden select-none font-display leading-[0.8] tracking-[-0.03em] text-ghost mix-blend-darken min-[900px]:block"
           style={{
-            fontSize: 'clamp(90px, 21vw, 360px)',
-            maskImage: 'linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%)',
+            fontSize: 'clamp(110px, 11.5vw, 210px)',
+            maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
           }}
         >
           <BrandWord />
@@ -212,7 +229,7 @@ export function Hero() {
       <div className="min-[900px]:on-light min-[900px]:absolute min-[900px]:inset-x-0 min-[900px]:bottom-0">
         <div className="shell pt-8 min-[900px]:pt-0">
           <div className="grid gap-8 min-[900px]:grid-cols-[1fr_auto] min-[900px]:items-end">
-            <div className="max-w-[640px]">
+            <div className="max-w-[580px]">
               <Focus show={revealed} index={0}>
                 <p className="label mb-6 text-ink-3">{hero.eyebrow}</p>
               </Focus>
@@ -225,13 +242,13 @@ export function Hero() {
                 className="font-display text-[clamp(48px,5.6vw,92px)] leading-[0.95] tracking-[-0.02em] text-ink"
               />
               <Focus show={revealed} index={3}>
-                <p className="mt-6 max-w-[48ch] text-[15px] leading-[1.65] text-ink-2 min-[900px]:text-[16px]">{hero.lede}</p>
+                <p className="mt-6 max-w-[48ch] text-[15px] leading-[1.65] text-ink-2 min-[900px]:max-w-[40ch] min-[900px]:text-[16px]">{hero.lede}</p>
               </Focus>
               <Focus show={revealed} index={4} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <Pill href={hero.cta.href} cursorLabel="RDV">
                   {hero.cta.label}
                 </Pill>
-                <Link href={hero.secondary.href} className="label border-b border-line-strong pb-1 text-ink transition-colors duration-300 hover:border-ink">
+                <Link href={hero.secondary.href} className="label hit border-b border-line-strong pb-1 text-ink transition-colors duration-300 hover:border-ink">
                   {hero.secondary.label}
                 </Link>
               </Focus>
@@ -248,7 +265,7 @@ export function Hero() {
                       width={160}
                       height={160}
                       aria-hidden="true"
-                      className="size-11 shrink-0 rounded-[12px] bg-[#c0c0c4] min-[900px]:size-16"
+                      className="size-11 shrink-0 rounded-[12px] bg-[#aab4b5] min-[900px]:size-16"
                     />
                     <div>
                       <p className="font-display text-[30px] leading-none min-[900px]:text-[38px]">
@@ -273,7 +290,7 @@ export function Hero() {
                   <span ref={fill} className="absolute inset-0 origin-left bg-ink" style={{ transform: 'scaleX(0)' }} />
                 </span>
                 <span ref={time} className="label tnum text-ink-3">
-                  00:00 / 00:06
+                  00:00 / 00:03
                 </span>
               </div>
               <button

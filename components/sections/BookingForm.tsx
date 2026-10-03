@@ -244,6 +244,7 @@ export function BookingForm() {
           </span>
         }
       >
+        {/* Each chip's label is positioned, so its visually hidden radio stays inside this scroller. */}
         <div
           ref={strip}
           className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 py-1 [mask-image:linear-gradient(90deg,#000_88%,transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -252,7 +253,7 @@ export function BookingForm() {
             ? days.map((d) => {
                 const disabled = !bookable(d)
                 return (
-                  <label key={d.iso} className={`group shrink-0 snap-start ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                  <label key={d.iso} className={`group relative shrink-0 snap-start ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                     <input
                       type="radio"
                       name="day"
@@ -291,7 +292,7 @@ export function BookingForm() {
                   <p className="label-sm pt-3.5 text-ink-3">{label}</p>
                   <div className="flex flex-wrap gap-2">
                     {slots.map((s) => (
-                      <label key={s.time} className={`group ${s.past ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                      <label key={s.time} className={`group relative ${s.past ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                         <input
                           type="radio"
                           name="time"
@@ -321,7 +322,7 @@ export function BookingForm() {
       <Step n={3} id={`${uid}-reason`} title={f.steps.reason} optional group="radiogroup">
         <div className="flex flex-wrap gap-2">
           {f.reasons.map((r) => (
-            <label key={r} className="group cursor-pointer">
+            <label key={r} className="group relative cursor-pointer">
               <input
                 type="radio"
                 name="reason"

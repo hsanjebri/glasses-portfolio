@@ -4,7 +4,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 
 > **Regard** is a placeholder name. Brand, address, prices and photos all live in `/content` and can be swapped without touching a component. See [Before launch](#before-launch).
 
-![Hero — the focus pulls through the lenses onto the Landolt chart](docs/screenshots/hero-desktop.jpg)
+![Hero — a woman puts on a pair of glasses and looks into the lens](docs/screenshots/hero-desktop.jpg)
 
 ---
 
@@ -28,8 +28,8 @@ A marketing site, catalogue and frame configurator for an independent optician i
 
 **Focus.** Everything on the site arrives the way an image sharpens when you put glasses on: blur to sharp, never bouncy, never sliding far.
 
-- **The hero clip** is a thin metal frame on an optician's chart of Landolt rings. The focus slides off the frame and through the lenses until the chart behind sharpens. The copy waits for that moment (`REVEAL_AT = 3.6 s`) and runs its own blur-to-sharp reveal in step with the footage.
-- **The giant wordmark** sits above the clip with `mix-blend-mode: darken`. The dark rim and rings pass in front of the letters, and the word reads through the clear lenses.
+- **The hero clip** is a fitting: a woman unfolds a pair of glasses, puts them on and looks into the lens. The footage is slowed 2.2× with motion-compensated interpolation, so the gesture plays as smooth slow motion, and the clip ends on that look and holds it. The copy waits for the glasses to settle (`REVEAL_AT = 2.3 s`) and runs its own blur-to-sharp reveal in step with the footage. Phones get their own 4:5 portrait cut of the clip, framed on her face and hands.
+- **The wordmark** sits on the bare wall to her left with `mix-blend-mode: darken`, so her hair, darker than the letters, passes in front of it. It shows from 900 px up; on a phone it would cross her face.
 - **Every reveal** uses one primitive, `<Focus>`: opacity 0, `blur(14px)`, `scale(1.02)` → sharp in 1.1 s, staggered.
 - **Page transitions** are a lens aperture: a `clip-path` iris closes on the click point and opens on the new page.
 - **SUN MODE.** Entering the Sun category, or a sun product, crossfades the whole page over 0.8 s into a warmer black with an amber accent.
@@ -48,7 +48,7 @@ A marketing site, catalogue and frame configurator for an independent optician i
 | | |
 |---|---|
 | ![Lookbook](docs/screenshots/lookbook.jpg) | ![Visit and booking](docs/screenshots/visit.jpg) |
-| **Carnet.** Editorial portraits, captioned like plates. | **Nous trouver.** Sidi Bou Said photography, hours, Google Maps link and the booking form. |
+| **Carnet.** Editorial portraits, captioned like plates. | **Nous trouver.** Sidi Bou Said photography, hours, a Google Maps link and the booking form: pick a day, a time from the opening hours, and a reason. |
 | ![Catalogue](docs/screenshots/catalogue.jpg) | ![Catalogue in SUN MODE](docs/screenshots/catalogue-sun.jpg) |
 | **Catalogue.** Filter by house, shape, colour, material, fit and price. Every filter lives in the URL. | **SUN MODE.** The same page, crossfaded into the warmer theme. |
 | ![Product page](docs/screenshots/product.jpg) | ![Configurator](docs/screenshots/composer.jpg) |
@@ -162,18 +162,18 @@ Nothing brand-specific is hard-coded in a component.
 | Configurator options and prices | `content/builder.ts` |
 | The houses on the logo wall | `content/brands.ts` (`logoWall`) |
 | A photograph | `content/photos.ts`, then point a product or section at its key |
-| The hero clip | replace `public/video/hero-1920.mp4` and `hero-960.mp4` (and the posters) |
+| The hero clip | replace `public/video/hero-1920.mp4`, its 4:5 phone cut `hero-portrait.mp4` and `hero-poster.jpg` |
 
 ### `REVEAL_AT`
 
 ```ts
 // lib/motion.ts
-export const REVEAL_AT = 3.6
+export const REVEAL_AT = 2.3
 ```
 
-This is the second of the hero clip at which the copy starts arriving. In the current clip the frame is sharp at about 2.5 s, and the focus starts pulling through the lenses at about 3.6 s. **To change it, edit that one number.** If you swap the clip, set it to the moment the footage settles. The hero reveals anyway on `ended`, on a video `error`, on a rejected `play()`, and after a 9 s timeout.
+This is the second of the hero clip at which the copy starts arriving. In the current clip the glasses settle on her face at about 2.3 s, and the clip ends at 3.4 s as she looks into the lens. **To change it, edit that one number.** If you swap the clip, set it to the moment the footage settles. The hero reveals anyway on `ended`, on a video `error`, on a rejected `play()`, and after a 9 s timeout.
 
-The stat-card thumbnails are cut from the clip's last frame. Their crop rectangles are `CROPS` at the top of `components/sections/Hero.tsx`.
+The stat-card thumbnails are cut from the clip's last frame: the glasses and her hand. Their crop rectangles are `CROPS` at the top of `components/sections/Hero.tsx`, given for the landscape clip and converted for the portrait cut through `PORTRAIT`.
 
 ## How it works
 
@@ -183,7 +183,7 @@ The stat-card thumbnails are cut from the clip's last frame. Their crop rectangl
 - **Configurator.** The whole configuration is a readable query string (`/composer?shape=cat-eye&cw=noir&lens=sun&coat=polarised&case=leather&gift=1&eng=SM`). It is restored on load and mirrored to `localStorage`. Invalid combinations are declared as data in `content/builder.ts`: polarised only with sun lenses, aviators in metal only, engraving only with the gift box. They render disabled with the reason shown, and are normalised away if they arrive in a link.
 - **Configurator preview.** The main picture is a real photograph of the chosen shape, worked on in the browser. An SVG filter repaints the frame in the chosen material: tortoiseshell is generated noise mapped through the acetate's own colours, while black, crystal, titanium and gold are flat tones. The photo's own shading is kept, so curves and highlights survive. The repaint is limited to the frame by outlines traced for each photo (`content/plates.ts`). Tinted layers go over the lenses: smoke for sun lenses, G-15 green when polarised, grey for photochromic, a warm cast for the blue filter, and a faint green sheen for anti-reflective. A new shape fades in over the last with a focus pull, a new material fades over the old frame, and a size change eases the shot closer. It is a representative rendering, labelled *Rendu indicatif*, not a photo of the exact frame.
 - **Orders.** "Commander sur WhatsApp" opens `wa.me/<number>` with the itemised configuration, the total and a link back to it. "Prendre rendez-vous avec cette configuration" opens the booking form with the build attached.
-- **Bookings.** The form posts to `/api/booking`, which validates the request and emails it to the shop when Resend is configured (replies go straight to the visitor if they left an email). If email isn't configured or the request fails, the form says so and offers the same request as a pre-filled WhatsApp message, so a booking is never silently lost. A hidden honeypot field drops spam bots.
+- **Bookings.** The form works like an appointment book. A strip of the next fourteen days shows closed days as closed and a day with nothing left as full. The chosen day's slots come from the opening hours in `site.ts`, hourly from opening to half an hour before closing, with today's slots starting an hour from now. Then the reason for the visit and the visitor's details; the chosen slot is spelled out above the button (*Lundi 5 octobre à 10 h 30*). The form posts to `/api/booking`, which validates the request and emails it to the shop when Resend is configured (replies go straight to the visitor if they left an email). If email isn't configured or the request fails, the form says so and offers the same request as a pre-filled WhatsApp message, so a booking is never silently lost. A hidden honeypot field drops spam bots.
 - **Search engines.** The home page carries an `Optician` schema (address, coordinates, opening hours, phone) and each product page a `Product` schema (brand, reference, photo, price in TND, in-store availability). Product pages share their own photo as the Open Graph image.
 - **Headers.** Every response sends `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` and HSTS. The video and logos are cached for a week. A Content Security Policy is left out because it would need nonces for Next's inline scripts.
 - **Lens cursor.** On desktop, a 90 px ring trails the pointer. Over product photos it becomes a 1.6× loupe; over links it shrinks to a dot with a label. It is off on touch and under reduced motion.
@@ -210,7 +210,7 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 ## Media, licences and credits
 
 - **Photography.** [Unsplash](https://unsplash.com/license), hot-linked from Unsplash's CDN as their API guidelines require. Every photographer is credited on `/credits`. All 50 photos have been registered with Unsplash's download endpoint (`npm run photos`), which the guidelines also ask for.
-- **Hero footage.** [Pexels, video 5995502](https://www.pexels.com/video/5995502/) under the Pexels licence (free for commercial use, no attribution required; credited on `/credits` anyway). Re-encoded to 1920 px (1.0 MB) and 960 px (238 KB), muted, faststart.
+- **Hero footage.** [Pexels, video 6006380](https://www.pexels.com/video/6006380/) under the Pexels licence (free for commercial use, no attribution required; credited on `/credits` anyway). Trimmed to the moment she looks into the lens, slowed 2.2× with motion-compensated interpolation, and encoded at 1920 px (1.2 MB) plus a 720×900 portrait cut for phones (0.5 MB), muted, faststart.
 - **Brand logos.** Public-domain text marks from Wikimedia Commons, in `public/brands/`. **They remain registered trademarks.** They are shown to indicate collections carried in store, which presumes the client is an authorised stockist (see the launch checklist). The Moscot file had its yellow sign background removed so it renders as a mark.
 - **Testimonials.** The quotes are text only, on purpose: stock photos of real people next to invented reviews would present strangers as customers.
 
@@ -224,7 +224,7 @@ Every value to replace is marked `// PLACEHOLDER` in `/content`.
 | Keyboard | ✅ skip link, visible focus rings, mobile menu traps focus and closes on Escape, filter sheet traps focus |
 | Reduced motion | ✅ no Lenis, no pinning, no blur; every section renders complete at rest |
 | Configurator logic | ✅ scripted test: polarised gating, metal-only aviator, engraving tied to the gift box, totals, URL round-trip, `localStorage` restore, WhatsApp message |
-| Booking | ✅ scripted test: validation, honeypot, `delivered: false` without email → WhatsApp hand-off carrying name, contact, date and the attached frame |
+| Booking | ✅ scripted test on a phone: empty submit flags day, time, name and contact and focuses the day strip; a Monday 10 h 30 booking posts slot, reason and the attached configuration; `delivered: false` without email → WhatsApp hand-off with the same details |
 | Structured data and headers | ✅ verified on the built site |
 | Layout shift (CLS) | ✅ 0.000 on home, catalogue, a product page and the configurator (emulated phone, 4× CPU slowdown) |
 | Lighthouse (mobile) | ⚠️ **not measured on this build.** An earlier build scored Accessibility 97–100, Best Practices 100, SEO 100 and CLS 0, but Performance 64–84, below the 90 target. Since then: the catalogue no longer runs a blur on every photo at load, card labels use solid fills instead of backdrop blur, and smooth scrolling no longer runs its loop on touch devices. The home page stays constrained by design, because the preloader plus a 3.6 s reveal delays its largest text. Measure on Vercel (PageSpeed Insights) rather than locally: CPU-throttled runs on the development machine varied by more than 5× between identical loads. |

@@ -254,6 +254,17 @@
   font-weight: 400;
 }
 
+/* A bigger tap area for small text links, without moving anything. */
+@utility hit {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -10px -6px;
+  }
+}
+
 @utility tnum {
   font-variant-numeric: tabular-nums;
 }

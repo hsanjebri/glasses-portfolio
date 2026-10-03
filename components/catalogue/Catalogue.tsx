@@ -121,7 +121,7 @@ export function Catalogue() {
           </div>
 
           {results.length ? (
-            <motion.ul layout={!reduced} className="grid gap-x-4 gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
+            <motion.ul layout={!reduced} className="grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-4 sm:gap-y-12 xl:grid-cols-3">
               <AnimatePresence mode="popLayout" initial={false}>
                 {results.map((p) => (
                   <motion.li

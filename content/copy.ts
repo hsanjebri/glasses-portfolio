@@ -29,12 +29,11 @@ export const hero = {
     { value: '15', unit: 'maisons', label: 'En boutique' },
   ],
   strip: {
-    /** What the clip shows: an optician's chart of Landolt rings. */
-    plate: 'Pl. 01 — Anneaux de Landolt',
+    /** What the clip shows: a fitting. */
+    plate: 'Pl. 01 — L’essayage',
     replay: 'Revoir',
   },
-  videoAlt:
-    'Une monture fine posée sur une planche d’anneaux de Landolt ; la mise au point passe de la monture au tableau, à travers les verres.',
+  videoAlt: 'Une femme blonde déplie une paire de lunettes noires, la pose sur son nez et regarde l’objectif.',
 }
 
 export const manifesto = {
@@ -407,7 +406,7 @@ export const credits = {
   blurb: 'Les photographies de ce site viennent d’Unsplash, la vidéo d’accueil de Pexels. Merci à leurs auteurs.',
   photoBy: 'Photo',
   on: 'sur Unsplash',
-  video: { label: 'Vidéo d’accueil', author: 'Pexels', href: 'https://www.pexels.com/video/5995502/' },
+  video: { label: 'Vidéo d’accueil', author: 'Pexels', href: 'https://www.pexels.com/video/6006380/' },
   logos: 'Les logos des maisons sont des marques déposées, reproduits pour signaler les collections disponibles en boutique.',
 }
 

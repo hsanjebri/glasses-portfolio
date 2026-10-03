@@ -27,21 +27,21 @@ export function ProductCard({ product, headingLevel = 'h3' }: { product: Product
   const Heading = headingLevel
 
   return (
-    <article className="group relative flex h-full flex-col gap-4">
+    <article className="group relative flex h-full flex-col gap-3 sm:gap-4">
       <div className="relative overflow-hidden rounded-[4px] bg-paper" data-cursor="magnify">
         <div key={photo} className={switched ? 'animate-[focus-pull_.7s_cubic-bezier(.2,.7,.1,1)_both]' : undefined}>
           <Photo
             photo={photo}
             ratio="4 / 5"
-            sizes="(max-width: 640px) 92vw, (max-width: 1280px) 46vw, 30vw"
+            sizes="(max-width: 1280px) 46vw, 30vw"
             imgClassName="transition-transform duration-[1.2s] ease-focus group-hover:rotate-[-1.5deg] group-hover:scale-[1.05] motion-reduce:!transform-none"
           />
         </div>
-        <span className="label absolute left-3 top-3 rounded-full bg-bg/85 px-2.5 py-1.5 text-ink">{labels[product.category]}</span>
+        <span className="label-sm sm:label absolute left-2 top-2 rounded-full bg-bg/85 px-2 py-1 text-ink sm:left-3 sm:top-3 sm:px-2.5 sm:py-1.5">{labels[product.category]}</span>
 
         {frame && frame.colourways.length > 1 ? (
           <div
-            className="absolute inset-x-3 bottom-3 z-[2] flex translate-y-1 items-center gap-1.5 rounded-full bg-bg/90 p-1 pr-3 opacity-0 transition-[opacity,transform] duration-500 ease-focus group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
+            className="absolute inset-x-2 bottom-2 z-[2] flex translate-y-1 items-center gap-1 rounded-full sm:inset-x-3 sm:bottom-3 sm:gap-1.5 bg-bg/90 p-1 pr-3 opacity-0 transition-[opacity,transform] duration-500 ease-focus group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
             role="group"
             aria-label={`${product.name} — ${catalogue.card.colourways(frame.colourways.length)}`}
           >
@@ -64,21 +64,22 @@ export function ProductCard({ product, headingLevel = 'h3' }: { product: Product
                 />
               </button>
             ))}
-            <span className="label ml-1 truncate text-ink-2">{colourway?.name}</span>
+            <span className="label ml-1 hidden min-w-0 truncate text-ink-2 sm:block">{colourway?.name}</span>
           </div>
         ) : null}
       </div>
 
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 flex-col gap-2">
-          <p className="label text-ink-3">{brands[product.brand].name}</p>
-          <Heading className="display-italic text-[clamp(26px,2.2vw,34px)] leading-none">
+      {/* Phones: brand, name and price stacked; wider: the price sits beside the name. */}
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
+          <p className="label-sm sm:label truncate text-ink-3">{brands[product.brand].name}</p>
+          <Heading className="display-italic text-[21px] leading-[1.05] sm:text-[clamp(26px,2.2vw,34px)] sm:leading-none">
             <Link href={href} className="after:absolute after:inset-0 after:content-['']" data-cursor-label="Voir">
               {product.name}
             </Link>
           </Heading>
         </div>
-        <p className="label tnum shrink-0 pt-0.5 text-ink-2">{formatPrice(product.price)}</p>
+        <p className="label-sm sm:label tnum shrink-0 text-ink-2 sm:pt-0.5">{formatPrice(product.price)}</p>
       </div>
     </article>
   )

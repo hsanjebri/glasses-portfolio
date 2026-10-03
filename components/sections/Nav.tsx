@@ -70,6 +70,12 @@ export function Nav() {
 
   return (
     <>
+      {/* Phones: once the page scrolls, a dark bar settles behind the header so it never sits on top of the text. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-x-0 top-0 z-[119] h-16 border-b border-line bg-bg/85 backdrop-blur-md transition-opacity duration-500 ease-focus min-[900px]:hidden"
+        style={{ opacity: scrolled && !open ? 1 : 0 }}
+      />
       <header
         className="pointer-events-none fixed inset-x-0 top-0 z-[120] text-white mix-blend-difference"
         onFocus={() => setFocusedIn(true)}

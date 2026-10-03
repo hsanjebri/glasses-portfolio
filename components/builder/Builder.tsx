@@ -40,7 +40,7 @@ export function Builder() {
                 <p className="text-[15px] text-ink-2">{copy.blurb}</p>
               </Focus>
             </div>
-            <button type="button" onClick={reset} className="label shrink-0 border-b border-line-strong pb-1 text-ink-2 transition-colors hover:border-ink hover:text-ink">
+            <button type="button" onClick={reset} className="label hit shrink-0 border-b border-line-strong pb-1 text-ink-2 transition-colors hover:border-ink hover:text-ink">
               {copy.reset}
             </button>
           </header>

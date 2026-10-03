@@ -11,7 +11,7 @@ export function Visit() {
     <section id="visite" aria-labelledby="visit-title" className="shell scroll-mt-20 py-24 md:py-40">
       <SectionHead id="visit-title" label={visit.label} title={[visit.title]} blurb={visit.blurb} className="mb-14 md:mb-20" />
 
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
         <div className="flex flex-col gap-4">
           <Focus className="grid grid-cols-[1.4fr_1fr] gap-4">
             <div className="overflow-hidden rounded-[4px]" data-cursor="magnify">
@@ -50,7 +50,7 @@ export function Visit() {
               </div>
               <div>
                 <h3 className="label mb-3 font-mono text-ink-3">{visit.phoneLabel}</h3>
-                <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="tnum border-b border-line-strong pb-0.5 text-ink transition-colors hover:border-ink">
+                <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="tnum hit border-b border-line-strong pb-0.5 text-ink transition-colors hover:border-ink">
                   {site.phone}
                 </a>
               </div>
@@ -74,7 +74,7 @@ export function Visit() {
           </Focus>
         </div>
 
-        <Focus index={2} className="rounded-[4px] border border-line bg-paper p-5 sm:p-8 md:p-10">
+        <Focus index={2} className="min-w-0 rounded-[4px] border border-line bg-paper p-5 sm:p-8 md:p-10">
           <BookingForm />
         </Focus>
       </div>

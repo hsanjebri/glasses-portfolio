@@ -18,7 +18,7 @@ export function Footer() {
             <br />
             {site.address.city}
             <br />
-            <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="transition-colors hover:text-ink">
+            <a href={`tel:${site.phone.replace(/\s/g, '')}`} className="hit transition-colors hover:text-ink">
               {site.phone}
             </a>
           </address>
@@ -30,7 +30,7 @@ export function Footer() {
             <ul className="flex flex-col gap-3">
               {col.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-[15px] text-ink-2 transition-colors duration-300 hover:text-ink">
+                  <Link href={l.href} className="hit text-[15px] text-ink-2 transition-colors duration-300 hover:text-ink">
                     {l.label}
                   </Link>
                 </li>
@@ -48,7 +48,7 @@ export function Footer() {
                   href={s.href}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-[15px] text-ink-2 transition-colors duration-300 hover:text-ink"
+                  className="hit text-[15px] text-ink-2 transition-colors duration-300 hover:text-ink"
                 >
                   {s.label}
                   <span className="sr-only"> {a11y.newTab}</span>

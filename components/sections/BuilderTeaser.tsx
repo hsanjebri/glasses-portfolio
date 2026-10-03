@@ -45,7 +45,7 @@ export function BuilderTeaser() {
       <div className="sticky top-0 flex h-svh flex-col items-center justify-between overflow-hidden py-16 motion-reduce:static motion-reduce:h-auto motion-reduce:gap-16 motion-reduce:py-28">
         <SectionHead id="teaser-title" label={builderTeaser.label} title={[builderTeaser.title]} blurb={builderTeaser.blurb} align="center" className="shell" />
 
-        <div className="relative grid aspect-square w-[var(--orbit)] place-items-center [--orbit:min(84vw,46svh,600px)]">
+        <div className="relative grid aspect-square w-[var(--orbit)] place-items-center [--orbit:min(66vw,46svh,600px)] sm:[--orbit:min(84vw,46svh,600px)]">
           <div ref={ring} aria-hidden="true" className="absolute inset-0 rounded-full border border-line" style={{ transform: 'rotate(var(--rot, 0deg))' }}>
             {builderTeaser.steps.map((label, i, all) => {
               const a = (i / all.length) * 360 - 90

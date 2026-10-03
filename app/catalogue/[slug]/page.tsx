@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: Params) {
             {copy.related}
           </h2>
         </Focus>
-        <ul className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-x-3 gap-y-9 md:gap-4 lg:grid-cols-3">
           {related.map((p, i) => (
             <li key={p.slug}>
               <Suspense>
